@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 import { AppHeader } from './components/layout/AppHeader';
+import { SANGAMBootScreen } from './components/SANGAMBootScreen';
 import { useTheme } from './hooks/useTheme';
-import { fetchLocations, fetchForecast } from './services/api';
+import { fetchLocations, fetchForecast, checkBackendHealth } from './services/api';
 import type { LocationInfo, ForecastResponse } from './types';
 
 // Pages
@@ -15,11 +16,36 @@ import ValidationPage from './pages/ValidationPage';
 import IndianNWPPage from './pages/IndianNWPPage';
 import ExplainabilityPage from './pages/ExplainabilityPage';
 
-
+type BootState = 'PROBING' | 'INITIALIZING' | 'FAST_PATH' | 'READY';
 
 export function App() {
   // Theme
   const { theme, cycleTheme, themeLabel } = useTheme();
+
+  const isAuditMode = typeof window !== 'undefined' && window.location.search.includes('scene=');
+
+  // Cold-start & Boot State Machine
+  const [bootState, setBootState] = useState<BootState>(isAuditMode ? 'INITIALIZING' : 'PROBING');
+
+  // Initial backend readiness probe
+  useEffect(() => {
+    if (isAuditMode) return;
+    let isMounted = true;
+    checkBackendHealth(900).then((health) => {
+      if (!isMounted) return;
+      if (health && health.status === 'healthy') {
+        // Backend is already warm & responsive
+        setBootState('FAST_PATH');
+      } else {
+        // Backend is cold / starting / unavailable
+        setBootState('INITIALIZING');
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuditMode]);
 
   // Data state
   const [locations, setLocations] = useState<LocationInfo[]>([]);
@@ -37,18 +63,21 @@ export function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load locations on mount
+  // Load locations once ready
   useEffect(() => {
-    fetchLocations().then((locs) => {
-      if (locs.length > 0) {
-        setLocations(locs);
-        setCurrentLocation(locs[0]);
-      }
-    });
-  }, []);
+    if (bootState === 'READY') {
+      fetchLocations().then((locs) => {
+        if (locs.length > 0) {
+          setLocations(locs);
+          setCurrentLocation(locs[0]);
+        }
+      });
+    }
+  }, [bootState]);
 
-  // Fetch forecast whenever location, leadTime, or dataMode changes
+  // Fetch forecast whenever location, leadTime, dataMode changes, or when boot completes
   const loadForecast = useCallback(async () => {
+    if (bootState !== 'READY') return;
     setIsLoading(true);
     setError(null);
     try {
@@ -66,11 +95,13 @@ export function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [currentLocation.lat, currentLocation.lon, leadTime, dataMode]);
+  }, [bootState, currentLocation.lat, currentLocation.lon, leadTime, dataMode]);
 
   useEffect(() => {
-    loadForecast();
-  }, [loadForecast]);
+    if (bootState === 'READY') {
+      loadForecast();
+    }
+  }, [bootState, loadForecast]);
 
   // Handle click on map for arbitrary coordinates
   const handleMapClickCoords = (lat: number, lon: number) => {
@@ -82,6 +113,16 @@ export function App() {
       elevation_m: 100,
     });
   };
+
+  // Render boot screen during initial check, cold-start, or audit mode
+  if (bootState !== 'READY' || isAuditMode) {
+    return (
+      <SANGAMBootScreen
+        onReady={() => setBootState('READY')}
+        isFastPath={bootState === 'FAST_PATH' && !isAuditMode}
+      />
+    );
+  }
 
   return (
     <BrowserRouter>

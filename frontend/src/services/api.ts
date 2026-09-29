@@ -67,3 +67,26 @@ export async function fetchLeadTimeAnalysis(): Promise<any> {
   return await res.json();
 }
 
+export interface BackendHealthResponse {
+  status: string;
+  system?: string;
+  version?: string;
+  timestamp?: string;
+  providers_available?: string[];
+  models_integrated?: string[];
+}
+
+export async function checkBackendHealth(timeoutMs: number = 3000): Promise<BackendHealthResponse | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(`${API_BASE_URL}/health`, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    clearTimeout(timer);
+    return null;
+  }
+}
+

@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 import yaml
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,7 +14,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     api_port: int = 8000
     api_host: str = "0.0.0.0"
-    cors_origins: List[str] = [
+    cors_origins: Union[List[str], str] = [
         "http://localhost:5173",
         "http://localhost:3000",
         "http://127.0.0.1:5173",
@@ -22,6 +23,33 @@ class Settings(BaseSettings):
     default_data_mode: str = "auto" # "auto", "live", "demo"
     open_meteo_base_url: str = "https://api.open-meteo.com/v1"
     open_meteo_ensemble_url: str = "https://ensemble-api.open-meteo.com/v1"
+
+    @field_validator("api_port", mode="before")
+    @classmethod
+    def assemble_api_port(cls, v: Any) -> int:
+        port_env = os.environ.get("PORT")
+        if port_env:
+            try:
+                return int(port_env)
+            except (ValueError, TypeError):
+                pass
+        return int(v) if v is not None else 8000
+
+    @field_validator("cors_origins", mode="after")
+    @classmethod
+    def assemble_cors_origins(cls, v: Any) -> List[str]:
+        if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    import json
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [item.strip() for item in v.split(",") if item.strip()]
+        elif isinstance(v, list):
+            return v
+        return []
 
 settings = Settings()
 

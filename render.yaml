@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: sangam-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEFAULT_DATA_MODE
+        value: auto
+      - key: CORS_ORIGINS
+        value: "*"

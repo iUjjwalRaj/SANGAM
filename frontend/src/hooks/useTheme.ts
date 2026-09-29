@@ -11,6 +11,8 @@ function getSystemPreference(): Theme {
 
 function getSavedTheme(): Theme | null {
   try {
+    const urlTheme = new URLSearchParams(window.location.search).get('theme');
+    if (urlTheme === 'dark' || urlTheme === 'oled' || urlTheme === 'light') return urlTheme;
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === 'dark' || saved === 'oled' || saved === 'light') return saved;
   } catch {

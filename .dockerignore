@@ -1,0 +1,17 @@
+.git
+.github
+.gitignore
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+node_modules
+frontend
+worker
+wrangler.jsonc
+docs
+tests
+.env
+*.log

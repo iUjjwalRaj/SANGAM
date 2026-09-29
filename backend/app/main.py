@@ -29,14 +29,41 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Enable CORS for frontend Vite/React access
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # In development prototype, allow all origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Production-hardened CORS configuration
+if settings.app_env == "production":
+    prod_origins = [o for o in (settings.cors_origins or []) if not ("localhost" in o or "127.0.0.1" in o)]
+    if "*" in prod_origins:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=False,
+            allow_methods=["GET", "POST", "OPTIONS"],
+            allow_headers=["*"],
+        )
+    elif prod_origins:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=prod_origins,
+            allow_credentials=True,
+            allow_methods=["GET", "POST", "OPTIONS"],
+            allow_headers=["*"],
+        )
+else:
+    # Development mode: allow local development origins
+    dev_origins = settings.cors_origins or [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000"
+    ]
+    allow_cred = "*" not in dev_origins
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=dev_origins,
+        allow_credentials=allow_cred,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 app.include_router(router, prefix="/api")
 
