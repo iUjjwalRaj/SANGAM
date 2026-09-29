@@ -27,20 +27,20 @@ export const Header: React.FC<HeaderProps> = ({
           width: '46px',
           height: '46px',
           borderRadius: '12px',
-          background: 'linear-gradient(135deg, #00f0ff 0%, #3b82f6 50%, #6366f1 100%)',
+          background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-ai) 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 0 20px rgba(0, 240, 255, 0.4)'
+          boxShadow: '0 0 20px color-mix(in srgb, var(--accent-primary) 30%, transparent)'
         }}>
-          <Sparkles size={24} color="#070a12" />
+          <Sparkles size={24} color="var(--text-inverse)" />
         </div>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', background: 'linear-gradient(90deg, #ffffff 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', background: 'linear-gradient(90deg, var(--text-primary) 0%, var(--accent-primary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               SANGAM
             </h1>
-            <span style={{ fontSize: '11px', fontWeight: '600', padding: '2px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.2)', color: '#38bdf8', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+            <span style={{ fontSize: '11px', fontWeight: '600', padding: '2px 8px', borderRadius: '6px', background: 'color-mix(in srgb, var(--accent-primary) 15%, transparent)', color: 'var(--accent-primary)', border: '1px solid color-mix(in srgb, var(--accent-primary) 30%, transparent)' }}>
               MoES / NCMRWF • Problem 26081
             </span>
           </div>
@@ -59,9 +59,9 @@ export const Header: React.FC<HeaderProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(99, 102, 241, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.35)',
-            color: '#a5b4fc',
+            background: 'color-mix(in srgb, var(--accent-ai) 15%, transparent)',
+            border: '1px solid color-mix(in srgb, var(--accent-ai) 35%, transparent)',
+            color: 'var(--accent-ai)',
             padding: '7px 14px',
             borderRadius: '8px',
             fontSize: '13px',
@@ -83,23 +83,23 @@ export const Header: React.FC<HeaderProps> = ({
           padding: '5px 12px',
           borderRadius: '16px',
           background: dataSource === 'LIVE'
-            ? 'rgba(16, 185, 129, 0.12)'
+            ? 'color-mix(in srgb, var(--accent-success) 12%, transparent)'
             : dataSource === 'HISTORICAL'
-            ? 'rgba(245, 158, 11, 0.12)'
-            : 'rgba(168, 85, 247, 0.12)',
+            ? 'color-mix(in srgb, var(--accent-warning) 12%, transparent)'
+            : 'color-mix(in srgb, var(--accent-ai) 12%, transparent)',
           border: `1px solid ${
             dataSource === 'LIVE'
-              ? 'rgba(16, 185, 129, 0.35)'
+              ? 'color-mix(in srgb, var(--accent-success) 35%, transparent)'
               : dataSource === 'HISTORICAL'
-              ? 'rgba(245, 158, 11, 0.35)'
-              : 'rgba(168, 85, 247, 0.35)'
+              ? 'color-mix(in srgb, var(--accent-warning) 35%, transparent)'
+              : 'color-mix(in srgb, var(--accent-ai) 35%, transparent)'
           }`
         }}>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase' }}>DATA MODE</span>
           <span style={{
             fontSize: '11px',
             fontWeight: '700',
-            color: dataSource === 'LIVE' ? '#34d399' : dataSource === 'HISTORICAL' ? '#fbbf24' : '#c084fc'
+            color: dataSource === 'LIVE' ? 'var(--accent-success)' : dataSource === 'HISTORICAL' ? 'var(--accent-warning)' : 'var(--accent-ai)'
           }}>
             {dataSource === 'LIVE' ? '🟢 LIVE' : dataSource === 'HISTORICAL' ? '🟡 HISTORICAL' : '🟣 SYNTHETIC DEMO'}
           </span>
@@ -112,25 +112,25 @@ export const Header: React.FC<HeaderProps> = ({
           gap: '6px',
           padding: '5px 12px',
           borderRadius: '16px',
-          background: 'rgba(255, 255, 255, 0.04)',
+          background: 'var(--surface-elevated)',
           border: '1px solid var(--border-subtle)'
         }}>
           <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase' }}>REFERENCE</span>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#93c5fd' }}>
+          <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--accent-primary)' }}>
             {dataSource === 'LIVE' ? 'Model State Estimate' : dataSource === 'HISTORICAL' ? 'Reanalysis (ERA5)' : 'Synthetic'}
           </span>
         </div>
 
         {/* Mode Selector */}
-        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0, 0, 0, 0.4)', borderRadius: '8px', padding: '3px', border: '1px solid var(--border-subtle)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--surface-elevated)', borderRadius: '8px', padding: '3px', border: '1px solid var(--border-subtle)' }}>
           {['auto', 'live', 'demo'].map((mode) => (
             <button
               key={mode}
               onClick={() => onModeChange(mode)}
               style={{
-                background: selectedMode === mode ? 'rgba(0, 240, 255, 0.2)' : 'transparent',
-                color: selectedMode === mode ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                border: selectedMode === mode ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid transparent',
+                background: selectedMode === mode ? 'color-mix(in srgb, var(--accent-primary) 20%, transparent)' : 'transparent',
+                color: selectedMode === mode ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                border: selectedMode === mode ? '1px solid var(--accent-primary)' : '1px solid transparent',
                 borderRadius: '6px',
                 padding: '4px 10px',
                 fontSize: '12px',
@@ -150,7 +150,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={onRefresh}
           disabled={isLoading}
           style={{
-            background: 'var(--bg-card-hover)',
+            background: 'var(--surface-hover)',
             border: '1px solid var(--border-subtle)',
             borderRadius: '8px',
             padding: '8px',

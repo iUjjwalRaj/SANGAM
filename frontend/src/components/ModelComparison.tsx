@@ -99,7 +99,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           resolution: '0.5° (Ensemble)',
           track: 'EXTENDED PROVIDER REGISTRY',
           status: 'REGISTERED ENSEMBLE (Not in Benchmark)',
-          statusBadgeColor: '#94a3b8',
+          statusBadgeColor: 'var(--text-secondary)',
           statusBg: 'rgba(148, 163, 184, 0.15)',
           note: 'Multi-model spread and disagreement assessment'
         };
@@ -109,7 +109,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           resolution: 'Standard',
           track: 'EXTENDED PROVIDER REGISTRY',
           status: 'Registered',
-          statusBadgeColor: '#94a3b8',
+          statusBadgeColor: 'var(--text-secondary)',
           statusBg: 'rgba(148, 163, 184, 0.15)',
           note: 'Integrated weather model'
         };
@@ -125,8 +125,8 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
       {/* Top Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <BarChart3 size={18} color="#00f0ff" />
-          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', letterSpacing: '-0.3px', margin: 0 }}>
+          <BarChart3 size={18} color="var(--accent-primary)" />
+          <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)', letterSpacing: '-0.3px', margin: 0 }}>
             Model Comparison &amp; Weight Contribution Audit
           </h3>
           <span style={{
@@ -134,8 +134,8 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
             fontWeight: '700',
             padding: '2px 8px',
             borderRadius: '4px',
-            background: 'rgba(16, 185, 129, 0.15)',
-            color: '#34d399',
+            background: 'color-mix(in srgb, var(--accent-success) 15%, transparent)',
+            color: 'var(--accent-success)',
             display: 'flex',
             alignItems: 'center',
             gap: '4px'
@@ -152,9 +152,9 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
               key={v}
               onClick={() => setActiveVar(v)}
               style={{
-                background: activeVar === v ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                color: activeVar === v ? '#00f0ff' : 'var(--text-secondary)',
-                border: activeVar === v ? '1px solid #00f0ff' : '1px solid transparent',
+                background: activeVar === v ? 'color-mix(in srgb, var(--accent-primary) 20%, transparent)' : 'var(--surface-elevated)',
+                color: activeVar === v ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                border: activeVar === v ? '1px solid var(--accent-primary)' : '1px solid transparent',
                 borderRadius: '6px',
                 padding: '4px 10px',
                 fontSize: '11px',
@@ -171,18 +171,18 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '8px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
         <button
           onClick={() => setActiveTab('table')}
           style={{
             background: 'none',
             border: 'none',
-            color: activeTab === 'table' ? '#00f0ff' : 'var(--text-muted)',
+            color: activeTab === 'table' ? 'var(--accent-primary)' : 'var(--text-muted)',
             fontSize: '13px',
             fontWeight: '700',
             cursor: 'pointer',
             paddingBottom: '4px',
-            borderBottom: activeTab === 'table' ? '2px solid #00f0ff' : '2px solid transparent'
+            borderBottom: activeTab === 'table' ? '2px solid var(--accent-primary)' : '2px solid transparent'
           }}
         >
           Detailed Audit Table (Track Separation)
@@ -192,12 +192,12 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           style={{
             background: 'none',
             border: 'none',
-            color: activeTab === 'bars' ? '#00f0ff' : 'var(--text-muted)',
+            color: activeTab === 'bars' ? 'var(--accent-primary)' : 'var(--text-muted)',
             fontSize: '13px',
             fontWeight: '700',
             cursor: 'pointer',
             paddingBottom: '4px',
-            borderBottom: activeTab === 'bars' ? '2px solid #00f0ff' : '2px solid transparent'
+            borderBottom: activeTab === 'bars' ? '2px solid var(--accent-primary)' : '2px solid transparent'
           }}
         >
           Visual Bar Comparison
@@ -207,12 +207,12 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           style={{
             background: 'none',
             border: 'none',
-            color: activeTab === 'baselines' ? '#00f0ff' : 'var(--text-muted)',
+            color: activeTab === 'baselines' ? 'var(--accent-primary)' : 'var(--text-muted)',
             fontSize: '13px',
             fontWeight: '700',
             cursor: 'pointer',
             paddingBottom: '4px',
-            borderBottom: activeTab === 'baselines' ? '2px solid #00f0ff' : '2px solid transparent'
+            borderBottom: activeTab === 'baselines' ? '2px solid var(--accent-primary)' : '2px solid transparent'
           }}
         >
           Operational Baselines
@@ -224,7 +224,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.12)', color: 'var(--text-muted)', fontSize: '11px', textTransform: 'uppercase' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '11px', textTransform: 'uppercase' }}>
                 <th style={{ padding: '8px 10px' }}>Model</th>
                 <th style={{ padding: '8px 10px' }}>Forecast ({unitMap[activeVar]})</th>
                 <th style={{ padding: '8px 10px' }}>Resolution</th>
@@ -236,31 +236,31 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
             <tbody>
               {/* SANGAM Dynamic Consensus Row */}
               <tr style={{
-                background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%)',
-                borderBottom: '1px solid rgba(0, 240, 255, 0.3)',
+                background: 'linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 12%, transparent) 0%, color-mix(in srgb, var(--accent-ai) 8%, transparent) 100%)',
+                borderBottom: '1px solid color-mix(in srgb, var(--accent-primary) 30%, transparent)',
                 fontWeight: '700'
               }}>
-                <td style={{ padding: '10px', color: '#00f0ff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <td style={{ padding: '10px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <CheckCircle2 size={14} /> SANGAM Dynamic Consensus
                 </td>
-                <td style={{ padding: '10px', color: '#00f0ff', fontSize: '13px' }}>
+                <td style={{ padding: '10px', color: 'var(--accent-primary)', fontSize: '13px' }}>
                   {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
                 </td>
-                <td style={{ padding: '10px', color: '#94a3b8' }}>Adaptive (0.25°)</td>
+                <td style={{ padding: '10px', color: 'var(--text-muted)' }}>Adaptive (0.25°)</td>
                 <td style={{ padding: '10px' }}>
-                  <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '3px', background: 'rgba(0, 240, 255, 0.15)', color: '#00f0ff', fontWeight: '700' }}>
+                  <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '3px', background: 'color-mix(in srgb, var(--accent-primary) 15%, transparent)', color: 'var(--accent-primary)', fontWeight: '700' }}>
                     VALIDATED BENCHMARK BLEND
                   </span>
                 </td>
-                <td style={{ padding: '10px', textAlign: 'right', color: '#00f0ff' }}>100.0%</td>
-                <td style={{ padding: '10px', textAlign: 'right', color: '#00f0ff', fontSize: '13px' }}>
+                <td style={{ padding: '10px', textAlign: 'right', color: 'var(--accent-primary)' }}>100.0%</td>
+                <td style={{ padding: '10px', textAlign: 'right', color: 'var(--accent-primary)', fontSize: '13px' }}>
                   {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
                 </td>
               </tr>
 
               {/* Group 1: VALIDATED SANGAM TRACK */}
-              <tr style={{ background: 'rgba(16, 185, 129, 0.08)', borderTop: '1px solid rgba(16, 185, 129, 0.3)', borderBottom: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                <td colSpan={6} style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', color: '#34d399', letterSpacing: '0.4px', textTransform: 'uppercase' }}>
+              <tr style={{ background: 'color-mix(in srgb, var(--accent-success) 8%, transparent)', borderTop: '1px solid color-mix(in srgb, var(--accent-success) 30%, transparent)', borderBottom: '1px solid color-mix(in srgb, var(--accent-success) 20%, transparent)' }}>
+                <td colSpan={6} style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', color: 'var(--accent-success)', letterSpacing: '0.4px', textTransform: 'uppercase' }}>
                   VALIDATED SANGAM TRACK — Primary Quantitative Benchmark Models (IFS + GFS + ICON)
                 </td>
               </tr>
@@ -272,14 +272,14 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                 const contribution = rawWeight * val;
 
                 return (
-                  <tr key={f.model_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: 'rgba(255, 255, 255, 0.01)' }}>
-                    <td style={{ padding: '10px', fontWeight: '600', color: '#f1f5f9' }}>
+                  <tr key={f.model_id} style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface)' }}>
+                    <td style={{ padding: '10px', fontWeight: '600', color: 'var(--text-primary)' }}>
                       {meta.displayName}
                     </td>
-                    <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '13px', color: '#f8fafc' }}>
+                    <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '13px', color: 'var(--text-primary)' }}>
                       {val.toFixed(1)} {unitMap[activeVar]}
                     </td>
-                    <td style={{ padding: '10px', color: '#94a3b8', fontSize: '11px' }}>
+                    <td style={{ padding: '10px', color: 'var(--text-secondary)', fontSize: '11px' }}>
                       {meta.resolution}
                     </td>
                     <td style={{ padding: '10px' }}>
@@ -295,10 +295,10 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                         {meta.status}
                       </span>
                     </td>
-                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', fontWeight: '700', color: '#cbd5e1' }}>
+                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', fontWeight: '700', color: 'var(--text-secondary)' }}>
                       {(rawWeight * 100).toFixed(1)}%
                     </td>
-                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: '#38bdf8' }}>
+                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--accent-primary)' }}>
                       +{contribution.toFixed(2)} {unitMap[activeVar]}
                     </td>
                   </tr>
@@ -306,8 +306,8 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
               })}
 
               {/* Group 2: EXTENDED PROVIDER REGISTRY */}
-              <tr style={{ background: 'rgba(245, 158, 11, 0.08)', borderTop: '1px solid rgba(245, 158, 11, 0.3)', borderBottom: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                <td colSpan={6} style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', color: '#fbbf24', letterSpacing: '0.4px', textTransform: 'uppercase' }}>
+              <tr style={{ background: 'color-mix(in srgb, var(--accent-warning) 8%, transparent)', borderTop: '1px solid color-mix(in srgb, var(--accent-warning) 30%, transparent)', borderBottom: '1px solid color-mix(in srgb, var(--accent-warning) 20%, transparent)' }}>
+                <td colSpan={6} style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', color: 'var(--accent-warning)', letterSpacing: '0.4px', textTransform: 'uppercase' }}>
                   EXTENDED PROVIDER REGISTRY — Architecture Integrations &amp; Candidate Models (Excluded from Validated Benchmark Blend)
                 </td>
               </tr>
@@ -317,14 +317,14 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                 const val = (f as any)[activeVar] || 0;
 
                 return (
-                  <tr key={f.model_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', opacity: 0.9 }}>
-                    <td style={{ padding: '10px', fontWeight: '600', color: '#e2e8f0' }}>
+                  <tr key={f.model_id} style={{ borderBottom: '1px solid var(--border)', opacity: 0.9 }}>
+                    <td style={{ padding: '10px', fontWeight: '600', color: 'var(--text-primary)' }}>
                       {meta.displayName}
                     </td>
-                    <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '13px', color: '#cbd5e1' }}>
+                    <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '13px', color: 'var(--text-secondary)' }}>
                       {val.toFixed(1)} {unitMap[activeVar]}
                     </td>
-                    <td style={{ padding: '10px', color: '#94a3b8', fontSize: '11px' }}>
+                    <td style={{ padding: '10px', color: 'var(--text-muted)', fontSize: '11px' }}>
                       {meta.resolution}
                     </td>
                     <td style={{ padding: '10px' }}>
@@ -340,10 +340,10 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                         {meta.status}
                       </span>
                     </td>
-                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: '#94a3b8', fontStyle: 'italic' }}>
+                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                       — (Registry Only)
                     </td>
-                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: '#94a3b8', fontStyle: 'italic' }}>
+                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                       — (Not in Blend)
                     </td>
                   </tr>
@@ -354,16 +354,16 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
 
           {/* Explicit Protocol Clarification Note */}
           <div style={{
-            background: 'rgba(7, 10, 18, 0.5)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            background: 'var(--surface-elevated)',
+            border: '1px solid var(--border)',
             borderRadius: '6px',
             padding: '10px 14px',
             marginTop: '12px',
             fontSize: '11px',
-            color: '#cbd5e1',
+            color: 'var(--text-secondary)',
             lineHeight: '1.5'
           }}>
-            <b style={{ color: '#00f0ff' }}>Audited Validation Separation:</b> The authoritative quantitative SANGAM blend and historical benchmark use strictly <b>ECMWF IFS + NOAA GFS + DWD ICON</b>. BharatFS, AIFS, and HGEFS are integrated in the Extended Provider Registry for architectural readiness, operational monitoring, and spread assessment; their registry membership does not alter the validated benchmark results or imply retrospective skill.
+            <b style={{ color: 'var(--accent-primary)' }}>Audited Validation Separation:</b> The authoritative quantitative SANGAM blend and historical benchmark use strictly <b>ECMWF IFS + NOAA GFS + DWD ICON</b>. BharatFS, AIFS, and HGEFS are integrated in the Extended Provider Registry for architectural readiness, operational monitoring, and spread assessment; their registry membership does not alter the validated benchmark results or imply retrospective skill.
           </div>
         </div>
       )}
@@ -373,31 +373,31 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {/* SANGAM Blended Result */}
           <div style={{
-            background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%)',
-            border: '1px solid rgba(0, 240, 255, 0.4)',
+            background: 'linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 12%, transparent) 0%, color-mix(in srgb, var(--accent-ai) 8%, transparent) 100%)',
+            border: '1px solid color-mix(in srgb, var(--accent-primary) 40%, transparent)',
             borderRadius: '8px',
             padding: '10px 14px'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '800', color: '#00f0ff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <CheckCircle2 size={14} /> SANGAM Dynamic Blended Consensus (IFS + GFS + ICON)
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '800', color: '#00f0ff' }}>
+              <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--accent-primary)' }}>
                 {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
-            <div style={{ height: '8px', background: 'rgba(0,0,0,0.4)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '8px', background: 'var(--surface-elevated)', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{
                 width: `${Math.min(100, ((blendedForecast[activeVar] || 0) / maxVal) * 100)}%`,
                 height: '100%',
-                background: 'linear-gradient(90deg, #00f0ff, #38bdf8)'
+                background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-ai))'
               }} />
             </div>
           </div>
 
           {/* Validated Track Sub-Section */}
           <div>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#34d399', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--accent-success)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px' }}>
               VALIDATED SANGAM TRACK (Contributing to Blend)
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -408,7 +408,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                 const w = weights[f.model_id] ?? 0.0;
 
                 return (
-                  <div key={f.model_id} style={{ padding: '6px 8px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
+                  <div key={f.model_id} style={{ padding: '6px 8px', background: 'var(--surface)', borderRadius: '6px', border: '1px solid var(--border)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', alignItems: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>
@@ -426,16 +426,16 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                         }}>
                           {meta.status}
                         </span>
-                        <span style={{ fontSize: '10px', fontWeight: '700', color: '#00f0ff' }}>
+                        <span style={{ fontSize: '10px', fontWeight: '700', color: 'var(--accent-primary)' }}>
                           [{ (w * 100).toFixed(1) }% weight]
                         </span>
                       </div>
-                      <span style={{ fontWeight: '700', color: '#f8fafc' }}>
+                      <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>
                         {val.toFixed(1)} {unitMap[activeVar]}
                       </span>
                     </div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: `${pct}%`, height: '100%', background: '#38bdf8' }} />
+                    <div style={{ height: '6px', background: 'var(--surface-elevated)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent-primary)' }} />
                     </div>
                   </div>
                 );
@@ -445,7 +445,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
 
           {/* Extended Provider Registry Sub-Section */}
           <div>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#fbbf24', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--accent-warning)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px' }}>
               EXTENDED PROVIDER REGISTRY (Candidate Integrations — Excluded from Blend)
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -456,10 +456,10 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                 const meta = getModelMetadata(f.model_id);
 
                 return (
-                  <div key={f.model_id} style={{ padding: '6px 8px', background: 'rgba(255,255,255,0.01)', borderRadius: '6px' }}>
+                  <div key={f.model_id} style={{ padding: '6px 8px', background: 'var(--surface)', borderRadius: '6px', border: '1px solid var(--border)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', alignItems: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ color: isBfs ? '#ff9933' : 'var(--text-secondary)', fontWeight: '600' }}>
+                        <span style={{ color: isBfs ? 'var(--accent-indian)' : 'var(--text-secondary)', fontWeight: '600' }}>
                           {meta.displayName}
                         </span>
                         <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>({meta.resolution})</span>
@@ -474,16 +474,16 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                         }}>
                           {meta.status}
                         </span>
-                        <span style={{ fontSize: '10px', color: '#94a3b8', fontStyle: 'italic' }}>
+                        <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           [Registry Only — Not in Blend]
                         </span>
                       </div>
-                      <span style={{ fontWeight: '700', color: isBfs ? '#ff9933' : '#cbd5e1' }}>
+                      <span style={{ fontWeight: '700', color: isBfs ? 'var(--accent-indian)' : 'var(--text-secondary)' }}>
                         {val.toFixed(1)} {unitMap[activeVar]}
                       </span>
                     </div>
-                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: `${pct}%`, height: '100%', background: isBfs ? '#ff9933' : '#64748b' }} />
+                    <div style={{ height: '6px', background: 'var(--surface-elevated)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${pct}%`, height: '100%', background: isBfs ? 'var(--accent-indian)' : 'var(--text-muted)' }} />
                     </div>
                   </div>
                 );
@@ -497,27 +497,27 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
       {activeTab === 'baselines' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {/* SANGAM Dynamic */}
-          <div style={{ background: 'rgba(0, 240, 255, 0.1)', border: '1px solid #00f0ff', borderRadius: '8px', padding: '10px 14px' }}>
+          <div style={{ background: 'color-mix(in srgb, var(--accent-primary) 10%, transparent)', border: '1px solid var(--accent-primary)', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '800', color: '#00f0ff' }}>
+              <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-primary)' }}>
                 Proposed: SANGAM Dynamic ML Weights (IFS + GFS + ICON)
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '800', color: '#00f0ff' }}>
+              <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--accent-primary)' }}>
                 {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
-            <p style={{ fontSize: '11px', color: '#94a3b8', margin: 0 }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: 0 }}>
               Conditioned on lead-time decay, geographic location, multi-model precipitation spread, and weather regime.
             </p>
           </div>
 
           {/* Best Single Model */}
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#f8fafc' }}>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 Baseline 1: Best Single Model ({baselines.best_single_model.model_name})
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '700', color: '#f8fafc' }}>
+              <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
                 {getVarVal(baselines.best_single_model).toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
@@ -527,12 +527,12 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           </div>
 
           {/* Simple Average */}
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#f8fafc' }}>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 Baseline 2: Simple Multi-Model Average (Equal 1/3 weights over IFS, GFS, ICON)
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '700', color: '#f8fafc' }}>
+              <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
                 {getVarVal(baselines.simple_average).toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
@@ -542,12 +542,12 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           </div>
 
           {/* Static Historical Weights */}
-          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#f8fafc' }}>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 Baseline 3: Static Historical Weights (Track B Fixed Weights)
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '700', color: '#f8fafc' }}>
+              <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
                 {getVarVal(baselines.static_historical_weights).toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>

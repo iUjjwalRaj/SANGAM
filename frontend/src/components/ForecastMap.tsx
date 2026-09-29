@@ -34,13 +34,13 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
       minZoom: 3,
       maxZoom: 14,
       zoomControl: true,
-      attributionControl: false
+      attributionControl: true
     });
 
-    // Dark scientific theme tiles (CartoDB Dark Matter)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
-      maxZoom: 19
+    // OpenStreetMap tiles (free, no API key required)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     const markerGroup = L.layerGroup().addTo(map);
@@ -72,7 +72,7 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
     // Custom icon helper
     const createMarkerIcon = (isSelected: boolean, rain: number = 0) => {
       const isWet = rain > 20.0;
-      const color = isSelected ? '#00f0ff' : (isWet ? '#38bdf8' : '#94a3b8');
+      const color = isSelected ? 'var(--accent-primary)' : (isWet ? 'var(--accent-primary)' : 'var(--text-muted)');
       const size = isSelected ? 24 : 14;
       
       return L.divIcon({
@@ -84,7 +84,7 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
             background: ${color};
             border: 2px solid #ffffff;
             border-radius: 50%;
-            box-shadow: 0 0 ${isSelected ? '16px #00f0ff' : '8px rgba(0,0,0,0.5)'};
+            box-shadow: 0 0 ${isSelected ? '14px var(--accent-primary)' : '6px rgba(0,0,0,0.4)'};
             transition: all 0.3s ease;
           "></div>
         `,
@@ -126,26 +126,26 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
 
     activeMarker.bindPopup(`
       <div style="font-size: 13px; line-height: 1.5; min-width: 170px;">
-        <div style="font-weight: 700; color: #38bdf8; font-size: 14px; margin-bottom: 4px;">
+        <div style="font-weight: 700; color: var(--accent-primary); font-size: 14px; margin-bottom: 4px;">
           ${currentLocation.name || 'Selected Coordinate'}
         </div>
-        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 8px;">
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
           ${currentLocation.lat.toFixed(2)}°N, ${currentLocation.lon.toFixed(2)}°E
         </div>
-        <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 4px; border-top: 1px solid var(--border);">
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: #94a3b8;">SANGAM Rain:</span>
-            <span style="font-weight: 700; color: #00f0ff;">${rain} mm</span>
+            <span style="color: var(--text-secondary);">SANGAM Rain:</span>
+            <span style="font-weight: 700; color: var(--accent-primary);">${rain} mm</span>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: #94a3b8;">Temperature:</span>
-            <span style="font-weight: 700; color: #fbbf24;">${temp} °C</span>
+            <span style="color: var(--text-secondary);">Temperature:</span>
+            <span style="font-weight: 700; color: var(--accent-warning);">${temp} °C</span>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: #94a3b8;">Wind Speed:</span>
-            <span style="font-weight: 700; color: #34d399;">${wind} km/h</span>
+            <span style="color: var(--text-secondary);">Wind Speed:</span>
+            <span style="font-weight: 700; color: var(--accent-success);">${wind} km/h</span>
           </div>
-          <div style="margin-top: 6px; padding: 2px 6px; background: rgba(0, 240, 255, 0.15); border-radius: 4px; font-size: 10px; font-weight: 700; color: #38bdf8; text-align: center;">
+          <div style="margin-top: 6px; padding: 2px 6px; background: color-mix(in srgb, var(--accent-primary) 15%, transparent); border-radius: 4px; font-size: 10px; font-weight: 700; color: var(--accent-primary); text-align: center;">
             REGIME: ${regime}
           </div>
         </div>
@@ -175,9 +175,9 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
         pointerEvents: 'none'
       }}>
         <div style={{
-          background: 'rgba(13, 19, 34, 0.85)',
+          background: 'var(--surface-elevated)',
           backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid var(--border)',
           borderRadius: '8px',
           padding: '6px 12px',
           display: 'flex',
@@ -185,8 +185,8 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
           gap: '8px',
           pointerEvents: 'auto'
         }}>
-          <MapPin size={15} color="#00f0ff" />
-          <span style={{ fontSize: '13px', fontWeight: '700', color: '#f8fafc' }}>
+          <MapPin size={15} color="var(--accent-primary)" />
+          <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>
             {currentLocation.name}
           </span>
           <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
@@ -195,13 +195,13 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
         </div>
 
         <div style={{
-          background: 'rgba(13, 19, 34, 0.85)',
+          background: 'var(--surface-elevated)',
           backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid var(--border)',
           borderRadius: '8px',
           padding: '6px 12px',
           fontSize: '11px',
-          color: '#38bdf8',
+          color: 'var(--accent-primary)',
           fontWeight: '600',
           pointerEvents: 'auto'
         }}>
@@ -223,10 +223,10 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
         gap: '6px',
         overflowX: 'auto',
         padding: '6px',
-        background: 'rgba(11, 15, 25, 0.85)',
+        background: 'var(--surface-elevated)',
         backdropFilter: 'blur(10px)',
         borderRadius: '10px',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
+        border: '1px solid var(--border)'
       }}>
         {presetLocations.map((loc) => {
           const isSelected = Math.abs(loc.lat - currentLocation.lat) < 0.1 && Math.abs(loc.lon - currentLocation.lon) < 0.1;
@@ -235,9 +235,9 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
               key={loc.id || loc.name}
               onClick={() => onSelectLocation(loc)}
               style={{
-                background: isSelected ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)',
-                color: isSelected ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                border: isSelected ? '1px solid #00f0ff' : '1px solid transparent',
+                background: isSelected ? 'color-mix(in srgb, var(--accent-primary) 20%, transparent)' : 'var(--surface)',
+                color: isSelected ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                border: isSelected ? '1px solid var(--accent-primary)' : '1px solid transparent',
                 borderRadius: '6px',
                 padding: '4px 10px',
                 fontSize: '11px',

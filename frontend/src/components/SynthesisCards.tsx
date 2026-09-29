@@ -12,11 +12,11 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
   const getConfidenceBadgeColor = (level: string) => {
     switch (level) {
       case 'High':
-        return { bg: 'rgba(16, 185, 129, 0.15)', text: '#34d399', border: 'rgba(16, 185, 129, 0.35)' };
+        return { bg: 'color-mix(in srgb, var(--accent-success) 15%, transparent)', text: 'var(--accent-success)', border: 'color-mix(in srgb, var(--accent-success) 35%, transparent)' };
       case 'Medium':
-        return { bg: 'rgba(245, 158, 11, 0.15)', text: '#fbbf24', border: 'rgba(245, 158, 11, 0.35)' };
+        return { bg: 'color-mix(in srgb, var(--accent-warning) 15%, transparent)', text: 'var(--accent-warning)', border: 'color-mix(in srgb, var(--accent-warning) 35%, transparent)' };
       default:
-        return { bg: 'rgba(239, 68, 68, 0.15)', text: '#f87171', border: 'rgba(239, 68, 68, 0.35)' };
+        return { bg: 'color-mix(in srgb, var(--accent-danger) 15%, transparent)', text: 'var(--accent-danger)', border: 'color-mix(in srgb, var(--accent-danger) 35%, transparent)' };
     }
   };
 
@@ -25,17 +25,17 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
   const getRegimeColor = (regime: string) => {
     switch (regime) {
       case 'heavy_rainfall':
-        return { color: '#38bdf8', label: 'HEAVY RAINFALL / CONVECTIVE' };
+        return { color: 'var(--accent-primary)', label: 'HEAVY RAINFALL / CONVECTIVE' };
       case 'heatwave':
         return { color: '#f97316', label: 'HEATWAVE WARNING' };
       case 'storm_cyclonic':
-        return { color: '#ef4444', label: 'CYCLONIC DEPRESSION' };
+        return { color: 'var(--accent-danger)', label: 'CYCLONIC DEPRESSION' };
       case 'high_wind':
-        return { color: '#a855f7', label: 'HIGH SQUALL WINDS' };
+        return { color: 'var(--accent-ai)', label: 'HIGH SQUALL WINDS' };
       case 'dry_spell':
-        return { color: '#eab308', label: 'DRY SPELL' };
+        return { color: 'var(--accent-warning)', label: 'DRY SPELL' };
       default:
-        return { color: '#10b981', label: 'NORMAL SYNOPTIC' };
+        return { color: 'var(--accent-success)', label: 'NORMAL SYNOPTIC' };
     }
   };
 
@@ -45,7 +45,7 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '18px' }}>
       {/* 1. SANGAM Blended Rainfall & Uncertainty */}
       <div className="glass-panel" style={{ padding: '18px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-10px', right: '-10px', width: '70px', height: '70px', background: 'radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-10px', right: '-10px', width: '70px', height: '70px', background: 'radial-gradient(circle, color-mix(in srgb, var(--accent-primary) 12%, transparent) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
           <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Blended Precipitation
@@ -68,11 +68,11 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '800', color: '#00f0ff', letterSpacing: '-0.5px' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '800', color: 'var(--accent-primary)', letterSpacing: '-0.5px' }}>
             {blended_forecast.rainfall.toFixed(1)}
           </span>
           <span style={{ fontSize: '15px', color: 'var(--text-secondary)', fontWeight: '600' }}>mm</span>
-          <span style={{ fontSize: '13px', color: '#38bdf8', fontWeight: '600', marginLeft: 'auto' }}>
+          <span style={{ fontSize: '13px', color: 'var(--accent-primary)', fontWeight: '600', marginLeft: 'auto' }}>
             ±{uncertainty.rainfall_spread.toFixed(1)} mm
           </span>
         </div>
@@ -89,15 +89,15 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
           <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Blended Temperature
           </span>
-          <Thermometer size={16} color="#fbbf24" />
+          <Thermometer size={16} color="var(--accent-warning)" />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '800', color: '#fbbf24', letterSpacing: '-0.5px' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '800', color: 'var(--accent-warning)', letterSpacing: '-0.5px' }}>
             {blended_forecast.temperature.toFixed(1)}
           </span>
           <span style={{ fontSize: '15px', color: 'var(--text-secondary)', fontWeight: '600' }}>°C</span>
-          <span style={{ fontSize: '13px', color: '#f59e0b', fontWeight: '600', marginLeft: 'auto' }}>
+          <span style={{ fontSize: '13px', color: 'var(--accent-warning)', fontWeight: '600', marginLeft: 'auto' }}>
             ±{uncertainty.temperature_spread.toFixed(1)} °C
           </span>
         </div>
@@ -114,11 +114,11 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
           <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Wind & Surface Pressure
           </span>
-          <Wind size={16} color="#34d399" />
+          <Wind size={16} color="var(--accent-success)" />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '800', color: '#34d399', letterSpacing: '-0.5px' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: '800', color: 'var(--accent-success)', letterSpacing: '-0.5px' }}>
             {blended_forecast.wind_speed.toFixed(1)}
           </span>
           <span style={{ fontSize: '15px', color: 'var(--text-secondary)', fontWeight: '600' }}>km/h</span>
@@ -152,14 +152,14 @@ export const SynthesisCards: React.FC<SynthesisCardsProps> = ({ forecast }) => {
 
         <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Disagreement Spread:</span>
-          <div style={{ flex: 1, height: '5px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: '5px', background: 'var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
             <div style={{
               width: `${Math.min(100, (system_metadata?.disagreement_index || 0.3) * 100)}%`,
               height: '100%',
-              background: 'linear-gradient(90deg, #10b981, #f59e0b, #ef4444)'
+              background: 'linear-gradient(90deg, var(--accent-success), var(--accent-warning), var(--accent-danger))'
             }} />
           </div>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#f8fafc' }}>
+          <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-primary)' }}>
             {((system_metadata?.disagreement_index || 0.3) * 100).toFixed(0)}%
           </span>
         </div>

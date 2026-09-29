@@ -52,7 +52,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
         overflowY: 'auto',
         padding: '26px',
         position: 'relative',
-        background: '#0d1322',
+        background: 'var(--bg-secondary)',
         border: '1px solid rgba(0, 240, 255, 0.3)'
       }}>
         {/* Close Button */}
@@ -78,8 +78,8 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-          <BarChart2 size={22} color="#00f0ff" />
-          <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#f8fafc' }}>
+          <BarChart2 size={22} color="var(--accent-primary)" />
+          <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)' }}>
             Multi-Model Verification & Benchmark Matrix
           </h2>
         </div>
@@ -97,8 +97,8 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
               fontSize: '12px',
               fontWeight: '700',
               cursor: 'pointer',
-              background: datasetTrack === 'real' ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-              color: datasetTrack === 'real' ? '#00f0ff' : 'var(--text-secondary)',
+              background: datasetTrack === 'real' ? 'color-mix(in srgb, var(--accent-primary) 20%, transparent)' : 'rgba(255, 255, 255, 0.05)',
+              color: datasetTrack === 'real' ? 'var(--accent-primary)' : 'var(--text-secondary)',
               border: datasetTrack === 'real' ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid var(--border-subtle)',
               transition: 'all 0.15s ease'
             }}
@@ -161,7 +161,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
         )}
 
         {isLoading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#38bdf8' }}>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--accent-primary)' }}>
             Loading verification benchmarks...
           </div>
         ) : report ? (
@@ -176,14 +176,14 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
                 <div>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#38bdf8', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--accent-primary)', textTransform: 'uppercase' }}>
                     Authoritative Benchmark • 1,800 Held-Out Test Instances (June 15–July 25, 2024)
                   </span>
-                  <div style={{ fontSize: '14px', fontWeight: '700', color: '#f8fafc', marginTop: '2px' }}>
+                  <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)', marginTop: '2px' }}>
                     Observed Improvement on Held-Out Test Partition vs Simple Average
                   </div>
                 </div>
-                <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                   Reference: <b>ERA5 Reanalysis (0.25°)</b>
                 </div>
               </div>
@@ -191,21 +191,21 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
               {/* 3 Headline Benchmark Metrics with Bootstrap Confidence Intervals (Part 9) */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
                 <div style={{ background: 'rgba(0,0,0,0.35)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>2m Temperature RMSE</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>2m Temperature RMSE</div>
                   <div style={{ fontSize: '20px', fontWeight: '800', color: '#10b981', marginTop: '2px' }}>+15.35%</div>
-                  <div style={{ fontSize: '10px', color: '#34d399', marginTop: '2px' }}>95% CI: [+12.72%, +17.90%] (p &lt; 0.05)</div>
+                  <div style={{ fontSize: '10px', color: '#34d399', marginTop: '2px' }}>95% CI: [+12.72%, +17.90%] (excludes 0)</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>1.026°C SANGAM vs 1.212°C Simple Avg</div>
                 </div>
 
                 <div style={{ background: 'rgba(0,0,0,0.35)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>10m Wind Speed RMSE</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>10m Wind Speed RMSE</div>
                   <div style={{ fontSize: '20px', fontWeight: '800', color: '#10b981', marginTop: '2px' }}>+12.86%</div>
-                  <div style={{ fontSize: '10px', color: '#34d399', marginTop: '2px' }}>95% CI: [+10.83%, +14.98%] (p &lt; 0.05)</div>
+                  <div style={{ fontSize: '10px', color: '#34d399', marginTop: '2px' }}>95% CI: [+10.83%, +14.98%] (excludes 0)</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>3.344 km/h SANGAM vs 3.838 km/h Simple Avg</div>
                 </div>
 
                 <div style={{ background: 'rgba(0,0,0,0.35)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>24h Precipitation RMSE</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>24h Precipitation RMSE</div>
                   <div style={{ fontSize: '20px', fontWeight: '800', color: '#fbbf24', marginTop: '2px' }}>+0.80% (Inconclusive)</div>
                   <div style={{ fontSize: '10px', color: '#fb923c', marginTop: '2px' }}>95% CI: [-0.37%, +3.10%] (crosses 0)</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>2.315 mm SANGAM vs 2.334 mm Simple Avg</div>
@@ -229,7 +229,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
                 </thead>
                 <tbody>
                   {report.rankings.map((row) => {
-                    const isSangam = row.name.includes('SANGAM');
+                    const isSangam = row.name.toLowerCase().includes('sangam');
                     return (
                       <tr
                         key={row.name}
@@ -239,10 +239,10 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
                           fontWeight: isSangam ? '700' : 'normal'
                         }}
                       >
-                        <td style={{ padding: '10px', color: isSangam ? '#00f0ff' : 'var(--text-secondary)' }}>
+                        <td style={{ padding: '10px', color: isSangam ? 'var(--accent-primary)' : 'var(--text-secondary)' }}>
                           #{row.rank}
                         </td>
-                        <td style={{ padding: '10px', color: isSangam ? '#00f0ff' : '#f8fafc' }}>
+                        <td style={{ padding: '10px', color: isSangam ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
                           {row.name}
                         </td>
                         <td style={{ padding: '10px' }}>
@@ -250,13 +250,13 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
                             fontSize: '10px',
                             padding: '2px 6px',
                             borderRadius: '4px',
-                            background: 'rgba(255,255,255,0.08)',
-                            color: 'var(--text-secondary)'
+                            background: isSangam ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255,255,255,0.06)',
+                            color: isSangam ? 'var(--accent-primary)' : 'var(--text-secondary)'
                           }}>
                             {row.model_type}
                           </span>
                         </td>
-                        <td style={{ padding: '10px', color: isSangam ? '#00f0ff' : '#f8fafc' }}>
+                        <td style={{ padding: '10px', color: isSangam ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
                           {row.rmse_rainfall.toFixed(2)}
                         </td>
                         <td style={{ padding: '10px' }}>{row.mae_rainfall.toFixed(2)}</td>
@@ -286,7 +286,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
             </div>
 
             <div style={{ fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
-              <b>Scientific Audit Protocol:</b> {report.scientific_disclaimer || "Metrics are evaluated on an out-of-sample held-out partition (1,800 test instances) with 72-hour purge buffers to prevent temporal leakage."}
+              <b>Scientific Audit Protocol:</b> {report.scientific_disclaimer || "Metrics are evaluated on an out-of-sample held-out partition (1,800 test instances) with 72-hour purge buffers to prevent temporal leakage."} Improvement indicators are based on bootstrap confidence intervals; gains whose 95% CI excludes zero are treated as statistically supported, while intervals spanning zero remain inconclusive.
             </div>
           </>
         ) : null}

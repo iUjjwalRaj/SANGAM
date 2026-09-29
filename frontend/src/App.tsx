@@ -1,22 +1,27 @@
-import { useState, useEffect } from 'react';
-import type { LocationInfo, ForecastResponse } from './types';
+import { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+
+import { AppHeader } from './components/layout/AppHeader';
+import { useTheme } from './hooks/useTheme';
 import { fetchLocations, fetchForecast } from './services/api';
-import { Header } from './components/Header';
-import { HeroOverview } from './components/HeroOverview';
-import { PipelineFlow } from './components/PipelineFlow';
-import { IndianModelSection } from './components/IndianModelSection';
-import { ForecastMap } from './components/ForecastMap';
-import { SynthesisCards } from './components/SynthesisCards';
-import { DynamicWeightsPanel } from './components/DynamicWeightsPanel';
-import { ModelComparison } from './components/ModelComparison';
-import { LeadTimePanel } from './components/LeadTimePanel';
-import { ExtremeWeatherPanel } from './components/ExtremeWeatherPanel';
-import { ExplainabilityPanel } from './components/ExplainabilityPanel';
-import { VerificationModal } from './components/VerificationModal';
-import { EvaluationScopePanel } from './components/EvaluationScopePanel';
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import type { LocationInfo, ForecastResponse } from './types';
+
+// Pages
+import OverviewPage from './pages/OverviewPage';
+import ForecastPage from './pages/ForecastPage';
+import ModelIntelligencePage from './pages/ModelIntelligencePage';
+import ValidationPage from './pages/ValidationPage';
+import IndianNWPPage from './pages/IndianNWPPage';
+import ExplainabilityPage from './pages/ExplainabilityPage';
+
+
 
 export function App() {
+  // Theme
+  const { theme, cycleTheme, themeLabel } = useTheme();
+
+  // Data state
   const [locations, setLocations] = useState<LocationInfo[]>([]);
   const [currentLocation, setCurrentLocation] = useState<LocationInfo>({
     name: 'New Delhi',
@@ -24,14 +29,13 @@ export function App() {
     region: 'North India (Indo-Gangetic Plain)',
     lat: 28.6139,
     lon: 77.2090,
-    elevation_m: 216
+    elevation_m: 216,
   });
   const [leadTime, setLeadTime] = useState<number>(24);
   const [dataMode, setDataMode] = useState<string>('auto');
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isVerificationOpen, setIsVerificationOpen] = useState<boolean>(false);
 
   // Load locations on mount
   useEffect(() => {
@@ -44,7 +48,7 @@ export function App() {
   }, []);
 
   // Fetch forecast whenever location, leadTime, or dataMode changes
-  const loadForecast = async () => {
+  const loadForecast = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -55,17 +59,18 @@ export function App() {
         dataMode
       );
       setForecast(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error communicating with SANGAM backend.';
       console.error('Failed to load forecast:', err);
-      setError(err.message || 'Error communicating with SANGAM backend API.');
+      setError(message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentLocation.lat, currentLocation.lon, leadTime, dataMode]);
 
   useEffect(() => {
     loadForecast();
-  }, [currentLocation, leadTime, dataMode]);
+  }, [loadForecast]);
 
   // Handle click on map for arbitrary coordinates
   const handleMapClickCoords = (lat: number, lon: number) => {
@@ -74,140 +79,124 @@ export function App() {
       region: 'Custom Geodesic Coordinate',
       lat,
       lon,
-      elevation_m: 100
+      elevation_m: 100,
     });
   };
 
   return (
-    <div style={{ maxWidth: '1500px', margin: '0 auto', padding: '18px 22px' }}>
-      {/* Header */}
-      <Header
-        dataSource={forecast?.data_source || 'LIVE'}
+    <BrowserRouter>
+      {/* Sticky Header + Navigation */}
+      <AppHeader
+        theme={theme}
+        onCycleTheme={cycleTheme}
+        themeLabel={themeLabel}
+        dataSource={forecast?.data_source || 'DEMO/SIMULATED'}
         selectedMode={dataMode}
-        onModeChange={(mode) => setDataMode(mode)}
+        onModeChange={setDataMode}
         onRefresh={loadForecast}
-        onOpenVerification={() => setIsVerificationOpen(true)}
         isLoading={isLoading}
       />
 
-      {/* Hero Overview & SIH Judge Summary Card (Parts 2, 13, 15, 16) */}
-      <HeroOverview dataSource={forecast?.data_source || 'LIVE'} />
-
-      {/* Core Blending Pipeline Visual Flow (Part 3) */}
-      <PipelineFlow />
-
-      {/* Error Banner if any */}
-      {error && (
-        <div style={{
-          background: 'rgba(239, 68, 68, 0.15)',
-          border: '1px solid rgba(239, 68, 68, 0.35)',
-          borderRadius: '10px',
-          padding: '12px 18px',
-          marginBottom: '18px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          color: '#f87171',
-          fontSize: '13px'
-        }}>
-          <AlertTriangle size={18} />
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Loading Overlay */}
-      {isLoading && !forecast && (
-        <div style={{
-          height: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
-          color: '#38bdf8'
-        }}>
-          <Loader2 size={36} className="animate-spin" />
-          <span style={{ fontSize: '15px', fontWeight: '600' }}>
-            SANGAM AI Engine blending multi-model NWP & AI forecasts...
-          </span>
-        </div>
-      )}
-
-      {forecast && (
-        <>
-          {/* Scientific Validation Scope & Disclosed Boundaries */}
-          <EvaluationScopePanel />
-
-          {/* Top Row: Primary Synthesis Cards & Uncertainty */}
-          <SynthesisCards forecast={forecast} />
-
-          {/* Middle Row: Interactive Map (Left) + Dynamic AI Weights (Right) */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1.25fr) minmax(320px, 1fr)', gap: '18px', marginBottom: '18px' }}>
-            <ForecastMap
-              currentLocation={currentLocation}
-              presetLocations={locations}
-              forecast={forecast}
-              onSelectLocation={(loc) => setCurrentLocation(loc)}
-              onMapClickCoords={handleMapClickCoords}
-            />
-
-            <DynamicWeightsPanel
-              weights={forecast.weights}
-              forecasts={forecast.model_forecasts}
-              leadTime={leadTime}
-              onLeadTimeChange={(lt) => setLeadTime(lt)}
-            />
+      {/* Main content area */}
+      <main style={{
+        maxWidth: '1440px',
+        margin: '0 auto',
+        padding: '24px 24px 0',
+        minHeight: 'calc(100vh - 120px)',
+      }}>
+        {/* Error banner */}
+        {error && (
+          <div className="card" style={{
+            padding: '12px 18px',
+            marginBottom: '18px',
+            borderColor: 'color-mix(in srgb, var(--accent-danger) 40%, transparent)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            color: 'var(--accent-danger)',
+            fontSize: '13px',
+          }}>
+            ⚠ {error}
           </div>
+        )}
 
-          {/* Model & Baseline Comparison Audit (Part 4) */}
-          <ModelComparison
-            forecasts={forecast.model_forecasts}
-            blendedForecast={forecast.blended_forecast}
-            baselines={forecast.baselines}
-            weights={forecast.weights.weights}
-          />
-
-          {/* Lead Time Analysis (24h | 48h | 72h) */}
-          <LeadTimePanel
-            forecast={forecast}
-            leadTime={leadTime}
-            onLeadTimeChange={(lt) => setLeadTime(lt)}
-          />
-
-          {/* Dedicated Indian Model Integration Section: BharatFS (Part 12) */}
-          <IndianModelSection />
-
-          {/* Bottom Grid: Extreme Weather Guidance (Left) + Explainability (Right) */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '18px', marginBottom: '24px' }}>
-            <ExtremeWeatherPanel alerts={forecast.extreme_events} />
-            <ExplainabilityPanel explainability={forecast.explainability} forecast={forecast} />
+        {/* Loading state */}
+        {isLoading && !forecast && (
+          <div style={{
+            height: '60vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '16px',
+            color: 'var(--accent-primary)',
+          }}>
+            <Loader2 size={32} className="animate-spin" />
+            <span style={{ fontSize: '14px', fontWeight: 600 }}>
+              SANGAM loading multi-model forecasts…
+            </span>
           </div>
-        </>
-      )}
+        )}
 
-      {/* Verification Benchmark Modal */}
-      <VerificationModal
-        isOpen={isVerificationOpen}
-        onClose={() => setIsVerificationOpen(false)}
-        leadTime={leadTime}
-      />
+        {/* Routes — only render when forecast data is available */}
+        {forecast && (
+          <Routes>
+            <Route path="/" element={
+              <OverviewPage forecast={forecast} />
+            } />
+            <Route path="/forecast" element={
+              <ForecastPage
+                locations={locations}
+                currentLocation={currentLocation}
+                setCurrentLocation={setCurrentLocation}
+                leadTime={leadTime}
+                setLeadTime={setLeadTime}
+                forecast={forecast}
+                handleMapClickCoords={handleMapClickCoords}
+              />
+            } />
+            <Route path="/models" element={
+              <ModelIntelligencePage
+                forecast={forecast}
+                leadTime={leadTime}
+                setLeadTime={setLeadTime}
+              />
+            } />
+            <Route path="/validation" element={
+              <ValidationPage
+                forecast={forecast}
+                leadTime={leadTime}
+                setLeadTime={setLeadTime}
+              />
+            } />
+            <Route path="/indian-nwp" element={
+              <IndianNWPPage />
+            } />
+            <Route path="/explainability" element={
+              <ExplainabilityPage forecast={forecast} />
+            } />
+          </Routes>
+        )}
+      </main>
 
       {/* Footer */}
       <footer style={{
         textAlign: 'center',
-        padding: '20px 0',
-        borderTop: '1px solid var(--border-subtle)',
+        padding: '24px 16px',
+        borderTop: '1px solid var(--border)',
         fontSize: '12px',
-        color: 'var(--text-muted)'
+        color: 'var(--text-muted)',
+        maxWidth: '1440px',
+        margin: '0 auto',
       }}>
         <p>
-          <b>SANGAM: Hybrid AI–NWP Multi-Model Forecast Blending System</b> • Ministry of Earth Sciences (MoES) & National Centre for Medium Range Weather Forecasting (NCMRWF)
+          <strong style={{ color: 'var(--text-secondary)' }}>SANGAM</strong> — Hybrid AI–NWP Multi-Model Forecast Blending System
         </p>
         <p style={{ marginTop: '4px' }}>
-          Smart India Hackathon Problem 26081 • Disaster Management Theme • Seamless operational live & offline-demo architecture
+          Ministry of Earth Sciences (MoES) • NCMRWF • SIH Problem 26081 • Disaster Management
         </p>
       </footer>
-    </div>
+    </BrowserRouter>
   );
 }
 
