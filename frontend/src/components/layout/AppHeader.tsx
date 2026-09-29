@@ -249,7 +249,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
           {/* Subtle right-aligned context */}
           <div style={{ marginLeft: 'auto', fontSize: '10px', color: 'var(--text-muted)', whiteSpace: 'nowrap', padding: '0 8px' }}>
-            MoES / NCMRWF • Problem 26081
+            Hybrid AI–NWP Forecast Blending
           </div>
         </nav>
       </div>

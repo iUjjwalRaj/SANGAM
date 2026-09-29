@@ -48,10 +48,10 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
                 letterSpacing: '0.8px',
                 textTransform: 'uppercase'
               }}>
-                SIH Problem 26081
+                Multi-Model Blending
               </span>
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: '600' }}>
-                MoES • NCMRWF • Disaster Management Theme
+                Operational AI–NWP Weather Synthesis
               </span>
             </div>
 
@@ -96,7 +96,7 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
               }}
             >
               <Award size={14} />
-              <span>{showJudgeCard ? 'Hide SIH Judge Summary' : 'View SIH Judge Summary'}</span>
+              <span>{showJudgeCard ? 'Hide Executive Summary' : 'View Executive Summary'}</span>
               {showJudgeCard ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
 
@@ -213,7 +213,7 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
         </div>
       </div>
 
-      {/* SIH Judge Executive Summary Card (Part 16) */}
+      {/* Executive Summary Card (Part 16) */}
       {showJudgeCard && (
         <div className="glass-panel" style={{
           padding: '18px 22px',
@@ -225,11 +225,11 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Award size={18} color="var(--accent-primary)" />
               <h3 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.2px', margin: 0 }}>
-                SIH Executive Judge Briefing & Verification Card
+                Executive Briefing & Verification Summary
               </h3>
             </div>
             <span style={{ fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '4px', background: 'color-mix(in srgb, var(--accent-primary) 15%, transparent)', color: 'var(--accent-primary)' }}>
-              Problem Statement 26081
+              Core Benchmark & Verification Scope
             </span>
           </div>
 

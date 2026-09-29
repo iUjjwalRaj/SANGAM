@@ -193,7 +193,7 @@ export function App() {
           <strong style={{ color: 'var(--text-secondary)' }}>SANGAM</strong> — Hybrid AI–NWP Multi-Model Forecast Blending System
         </p>
         <p style={{ marginTop: '4px' }}>
-          Ministry of Earth Sciences (MoES) • NCMRWF • SIH Problem 26081 • Disaster Management
+          Operational Multi-Model Weather Synthesis & Dynamic ML Reliability Weighting
         </p>
       </footer>
     </BrowserRouter>

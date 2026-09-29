@@ -18,7 +18,7 @@ export const IndianModelSection: React.FC = () => {
               Indian NWP Integration: Bharat Forecast System (BharatFS 6 km)
             </h3>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
-              Ministry of Earth Sciences (MoES) • IITM Pune • IMD • NCMRWF
+              Model Provenance: Developed by IITM Pune, IMD & NCMRWF (MoES)
             </p>
           </div>
         </div>

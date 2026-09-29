@@ -54,6 +54,9 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
     });
 
     mapInstanceRef.current = map;
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
 
     return () => {
       map.remove();
@@ -209,48 +212,75 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
         </div>
       </div>
 
-      {/* Map Container */}
-      <div ref={mapContainerRef} style={{ width: '100%', height: '100%', minHeight: '430px', zIndex: 1 }} />
+      {/* Map Container Wrapper */}
+      <div style={{ position: 'relative', flex: 1, minHeight: '400px', width: '100%' }}>
+        <div ref={mapContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1 }} />
 
-      {/* Preset Quick Chips on Bottom */}
+        {/* Preset Quick Chips on Bottom of Map */}
+        <div style={{
+          position: 'absolute',
+          bottom: '12px',
+          left: '12px',
+          right: '12px',
+          zIndex: 1000,
+          display: 'flex',
+          gap: '6px',
+          overflowX: 'auto',
+          padding: '6px',
+          background: 'var(--surface-elevated)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '10px',
+          border: '1px solid var(--border)'
+        }}>
+          {presetLocations.map((loc) => {
+            const isSelected = Math.abs(loc.lat - currentLocation.lat) < 0.1 && Math.abs(loc.lon - currentLocation.lon) < 0.1;
+            return (
+              <button
+                key={loc.id || loc.name}
+                onClick={() => onSelectLocation(loc)}
+                style={{
+                  background: isSelected ? 'color-mix(in srgb, var(--accent-primary) 20%, transparent)' : 'var(--surface)',
+                  color: isSelected ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                  border: isSelected ? '1px solid var(--accent-primary)' : '1px solid transparent',
+                  borderRadius: '6px',
+                  padding: '4px 10px',
+                  fontSize: '11px',
+                  fontWeight: isSelected ? '700' : '500',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {loc.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Cartographic Provenance & Boundary Notice */}
       <div style={{
-        position: 'absolute',
-        bottom: '12px',
-        left: '12px',
-        right: '12px',
-        zIndex: 1000,
-        display: 'flex',
-        gap: '6px',
-        overflowX: 'auto',
-        padding: '6px',
+        padding: '7px 14px',
         background: 'var(--surface-elevated)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '10px',
-        border: '1px solid var(--border)'
+        borderTop: '1px solid var(--border)',
+        fontSize: '10px',
+        color: 'var(--text-muted)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '6px',
+        lineHeight: 1.45,
+        zIndex: 2,
       }}>
-        {presetLocations.map((loc) => {
-          const isSelected = Math.abs(loc.lat - currentLocation.lat) < 0.1 && Math.abs(loc.lon - currentLocation.lon) < 0.1;
-          return (
-            <button
-              key={loc.id || loc.name}
-              onClick={() => onSelectLocation(loc)}
-              style={{
-                background: isSelected ? 'color-mix(in srgb, var(--accent-primary) 20%, transparent)' : 'var(--surface)',
-                color: isSelected ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                border: isSelected ? '1px solid var(--accent-primary)' : '1px solid transparent',
-                borderRadius: '6px',
-                padding: '4px 10px',
-                fontSize: '11px',
-                fontWeight: isSelected ? '700' : '500',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s'
-              }}
-            >
-              {loc.name}
-            </button>
-          );
-        })}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '850px' }}>
+          <span>
+            <b>Cartographic Notice:</b> Basemap rendered from standard OpenStreetMap contributors (ODbL). International boundaries and disputed areas follow the conventions represented by the OpenStreetMap basemap and may differ from national governmental cartographic representations. Station coordinates use WGS84.
+          </span>
+        </div>
+        <div style={{ fontSize: '10px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+          WGS84 Reference
+        </div>
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
       {/* Hero */}
       <section style={{ textAlign: 'center', padding: '48px 16px 36px' }}>
         <div className="badge badge-primary" style={{ marginBottom: '12px' }}>
-          SIH Problem 26081 • Disaster Management
+          Operational Forecast Blending Platform
         </div>
         <h1 className="page-title" style={{ fontSize: '36px', marginBottom: '8px' }}>
           SANGAM
@@ -46,7 +46,6 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
           margin: '0 auto',
         }}>
           Context-aware dynamic weighting of multiple weather forecasting systems.
-          Ministry of Earth Sciences (MoES) • NCMRWF
         </p>
       </section>
 
@@ -161,37 +160,73 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
           gap: '14px',
         }}>
           <button className="card" onClick={() => navigate('/forecast')} style={{
-            padding: '20px', cursor: 'pointer', textAlign: 'left', border: '1px solid var(--border)',
+            padding: '20px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            border: '1px solid var(--border)',
+            background: 'var(--surface)',
+            color: 'var(--text-primary)',
+            fontFamily: 'var(--font-sans)',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            borderRadius: 'var(--radius-md)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <MapPin size={16} style={{ color: 'var(--accent-primary)' }} />
-              <span style={{ fontWeight: 700, fontSize: '14px' }}>Live Forecast</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <MapPin size={18} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
+              <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)', letterSpacing: '-0.2px', lineHeight: 1.4 }}>
+                Live Forecast
+              </span>
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
               Interactive map, blended forecast, uncertainty, and extreme weather guidance.
             </p>
           </button>
 
           <button className="card" onClick={() => navigate('/models')} style={{
-            padding: '20px', cursor: 'pointer', textAlign: 'left', border: '1px solid var(--border)',
+            padding: '20px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            border: '1px solid var(--border)',
+            background: 'var(--surface)',
+            color: 'var(--text-primary)',
+            fontFamily: 'var(--font-sans)',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            borderRadius: 'var(--radius-md)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <BarChart3 size={16} style={{ color: 'var(--accent-ai)' }} />
-              <span style={{ fontWeight: 700, fontSize: '14px' }}>Model Intelligence</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <BarChart3 size={18} style={{ color: 'var(--accent-ai)', flexShrink: 0 }} />
+              <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)', letterSpacing: '-0.2px', lineHeight: 1.4 }}>
+                Model Intelligence
+              </span>
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
               Dynamic AI weights, model comparison, and provider registry.
             </p>
           </button>
 
           <button className="card" onClick={() => navigate('/indian-nwp')} style={{
-            padding: '20px', cursor: 'pointer', textAlign: 'left', border: '1px solid var(--border)',
+            padding: '20px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            border: '1px solid var(--border)',
+            background: 'var(--surface)',
+            color: 'var(--text-primary)',
+            fontFamily: 'var(--font-sans)',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            borderRadius: 'var(--radius-md)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ fontSize: '16px' }}>🇮🇳</span>
-              <span style={{ fontWeight: 700, fontSize: '14px' }}>Indian NWP</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '18px', lineHeight: 1 }}>🇮🇳</span>
+              <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)', letterSpacing: '-0.2px', lineHeight: 1.4 }}>
+                Indian NWP
+              </span>
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
               BharatFS 6 km integration, Mission Mausam, and Indian model ecosystem.
             </p>
           </button>

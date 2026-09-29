@@ -30,7 +30,7 @@ const IndianNWPPage: React.FC = () => {
               BharatFS 6 km Architecture
             </div>
             <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-              Ministry of Earth Sciences (MoES) • IITM Pune • IMD • NCMRWF
+              Model Provenance: Developed by IITM Pune, IMD & NCMRWF (MoES)
             </div>
           </div>
         </div>

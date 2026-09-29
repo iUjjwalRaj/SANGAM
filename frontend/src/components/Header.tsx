@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
               SANGAM
             </h1>
             <span style={{ fontSize: '11px', fontWeight: '600', padding: '2px 8px', borderRadius: '6px', background: 'color-mix(in srgb, var(--accent-primary) 15%, transparent)', color: 'var(--accent-primary)', border: '1px solid color-mix(in srgb, var(--accent-primary) 30%, transparent)' }}>
-              MoES / NCMRWF • Problem 26081
+              Multi-Model Blending System
             </span>
           </div>
           <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>

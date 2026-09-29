@@ -12,10 +12,10 @@ export const EvaluationScopePanel: React.FC = () => {
           <Database size={18} color="var(--accent-primary)" />
           <div>
             <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', letterSpacing: '-0.2px' }}>
-              Scientific Validation Scope & Disclosed Boundaries (MoES / NCMRWF)
+              Scientific Validation Scope & Disclosed Boundaries
             </h3>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-              Strict out-of-sample temporal holdout protocol conforming to Problem Statement 26081.
+              Strict out-of-sample temporal holdout protocol for multi-model operational forecasting.
             </p>
           </div>
         </div>
