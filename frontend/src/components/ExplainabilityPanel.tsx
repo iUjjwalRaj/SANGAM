@@ -16,7 +16,6 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({ explai
   const lon = forecast?.location?.lon || 77.21;
   const regimeName = forecast?.weather_regime?.regime || 'normal';
   const precipSpread = forecast?.uncertainty?.rainfall_spread || 1.2;
-  const tempSpread = forecast?.uncertainty?.temperature_spread || 0.8;
   const modelForecasts = forecast?.model_forecasts || [];
 
   // Calculate ensemble mean and std dev from actual model forecasts
@@ -109,18 +108,21 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({ explai
             <span style={{ color: '#94a3b8' }}>2. Coordinates:</span> <b style={{ color: '#f1f5f9' }}>{lat.toFixed(2)}°N, {lon.toFixed(2)}°E</b>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
-            <span style={{ color: '#94a3b8' }}>3. Disagreement Spread:</span> <b style={{ color: '#f59e0b' }}>±{precipSpread.toFixed(1)} mm / ±{tempSpread.toFixed(1)}°C</b>
+            <span style={{ color: '#94a3b8' }}>3. Precipitation Spread:</span> <b style={{ color: '#f59e0b' }}>±{precipSpread.toFixed(1)} mm max-min</b>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
-            <span style={{ color: '#94a3b8' }}>4. Ensemble Mean / Std Dev:</span> <b style={{ color: '#10b981' }}>{meanTemp.toFixed(1)}°C (σ={stdTemp.toFixed(2)})</b>
+            <span style={{ color: '#94a3b8' }}>4. Spread Std Dev:</span> <b style={{ color: '#10b981' }}>σ={stdTemp.toFixed(2)} dispersion</b>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
-            <span style={{ color: '#94a3b8' }}>5. Classified Regime:</span> <b style={{ color: '#a78bfa' }}>{regimeName.replace('_', ' ').toUpperCase()}</b>
+            <span style={{ color: '#94a3b8' }}>5. Model Precipitation Inputs:</span> <b style={{ color: '#cbd5e1' }}>IFS, GFS, ICON + mean</b>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
-            <span style={{ color: '#94a3b8' }}>6. Skill Features:</span> <b style={{ color: '#cbd5e1' }}>Track B Historical Brier/MAE</b>
+            <span style={{ color: '#94a3b8' }}>6. Classified Regime:</span> <b style={{ color: '#a78bfa' }}>{regimeName.replace('_', ' ').toUpperCase()}</b>
           </div>
         </div>
+        <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '6px', marginBottom: 0, fontStyle: 'italic' }}>
+          *Audited against active LightGBM feature vector and heuristic layer. Unpassed candidate features (e.g. moisture convergence, terrain, skill priors) are strictly excluded from the display.
+        </p>
       </div>
 
       {/* Model-by-Model Rationale */}

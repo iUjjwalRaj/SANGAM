@@ -24,6 +24,9 @@ export const DynamicWeightsPanel: React.FC<DynamicWeightsPanelProps> = ({
     ensemble: { color: '#34d399', bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.35)' }
   };
 
+  const VALIDATED_IDS = ['ecmwf_ifs', 'noaa_gfs', 'dwd_icon'];
+  const validatedForecasts = forecasts.filter(f => VALIDATED_IDS.includes(f.model_id));
+  const extendedForecasts = forecasts.filter(f => !VALIDATED_IDS.includes(f.model_id));
   const leadTimes = [6, 12, 18, 24, 36, 48, 72, 96, 120];
 
   return (
@@ -32,15 +35,15 @@ export const DynamicWeightsPanel: React.FC<DynamicWeightsPanelProps> = ({
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Cpu size={18} color="#00f0ff" />
-            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', letterSpacing: '-0.3px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#f8fafc', letterSpacing: '-0.3px', margin: 0 }}>
               Dynamic AI Weighting Engine
             </h3>
             <span style={{ fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '4px', background: 'rgba(0, 240, 255, 0.15)', color: '#38bdf8' }}>
-              Σ w_i = 100%
+              Validated Blend Σ w_i = 100%
             </span>
           </div>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-            Weights dynamically conditioned on current atmospheric state, lead time, and regime skill
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', marginBottom: 0 }}>
+            Dynamic weights calculated exclusively over the <b>Validated Track (IFS + GFS + ICON)</b>. Extended models are displayed for architectural preview and spread assessment.
           </p>
         </div>
 
@@ -71,10 +74,10 @@ export const DynamicWeightsPanel: React.FC<DynamicWeightsPanelProps> = ({
         </div>
       </div>
 
-      {/* Proportional Stacked Bar */}
+      {/* Proportional Stacked Bar (Validated Models Only) */}
       <div style={{ marginBottom: '18px' }}>
         <div style={{ height: '14px', width: '100%', borderRadius: '7px', display: 'flex', overflow: 'hidden', background: 'rgba(255, 255, 255, 0.05)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)' }}>
-          {forecasts.map((f) => {
+          {validatedForecasts.map((f) => {
             const w = weights.weights[f.model_id] || 0.0;
             const pct = (w * 100).toFixed(1);
             const styleInfo = modelColorMap[f.model_id] || { color: '#ffffff' };
@@ -87,66 +90,139 @@ export const DynamicWeightsPanel: React.FC<DynamicWeightsPanelProps> = ({
                   background: styleInfo.color,
                   transition: 'width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
-                title={`${f.model_name}: ${pct}%`}
+                title={`${f.model_name}: ${pct}% (Validated Track)`}
               />
             );
           })}
         </div>
       </div>
 
-      {/* Individual Model Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '12px' }}>
-        {forecasts.map((f) => {
-          const w = weights.weights[f.model_id] || 0.0;
-          const pct = (w * 100).toFixed(1);
-          const styleInfo = modelColorMap[f.model_id] || { color: '#ffffff', bg: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.2)' };
-          
-          return (
-            <div
-              key={f.model_id}
-              style={{
-                background: 'rgba(13, 19, 34, 0.6)',
-                border: `1px solid ${styleInfo.border}`,
-                borderRadius: '10px',
-                padding: '12px',
-                position: 'relative'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: styleInfo.color, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {f.model_id === 'bharat_fs' && <span>🇮🇳</span>}
-                  {f.model_name}
-                </span>
-                <span style={{
-                  fontSize: '9px',
-                  fontWeight: '700',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  background: f.model_id === 'bharat_fs' ? 'rgba(249, 115, 22, 0.25)' : (f.model_type === 'AI' ? 'rgba(168, 85, 247, 0.25)' : (f.model_type === 'NWP' ? 'rgba(59, 130, 246, 0.25)' : 'rgba(16, 185, 129, 0.25)')),
-                  color: f.model_id === 'bharat_fs' ? '#fb923c' : (f.model_type === 'AI' ? '#c084fc' : (f.model_type === 'NWP' ? '#60a5fa' : '#34d399'))
-                }}>
-                  {f.model_id === 'bharat_fs' ? 'ARCHITECTURAL PREVIEW' : f.model_type}
-                </span>
-              </div>
+      {/* Group 1: VALIDATED SANGAM TRACK CARDS */}
+      <div style={{ marginBottom: '16px' }}>
+        <div style={{ fontSize: '11px', fontWeight: '800', color: '#34d399', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>●</span> VALIDATED SANGAM TRACK (Dynamic Consensus Blending)
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+          {validatedForecasts.map((f) => {
+            const w = weights.weights[f.model_id] || 0.0;
+            const pct = (w * 100).toFixed(1);
+            const styleInfo = modelColorMap[f.model_id] || { color: '#ffffff', bg: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.2)' };
+            
+            return (
+              <div
+                key={f.model_id}
+                style={{
+                  background: 'rgba(13, 19, 34, 0.6)',
+                  border: `1px solid ${styleInfo.border}`,
+                  borderRadius: '10px',
+                  padding: '12px',
+                  position: 'relative'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: styleInfo.color }}>
+                    {f.model_name}
+                  </span>
+                  <span style={{
+                    fontSize: '9px',
+                    fontWeight: '700',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    background: 'rgba(16, 185, 129, 0.2)',
+                    color: '#34d399',
+                    border: '1px solid rgba(16, 185, 129, 0.3)'
+                  }}>
+                    VALIDATED NWP
+                  </span>
+                </div>
 
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                <span style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800', color: '#f8fafc' }}>
-                  {pct}%
-                </span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>weight</span>
-              </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800', color: '#f8fafc' }}>
+                    {pct}%
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: '600' }}>consensus weight</span>
+                </div>
 
-              <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Model Rain:</span>
-                <span style={{ fontWeight: '700', color: '#f8fafc' }}>{f.precipitation.toFixed(1)} mm</span>
+                <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Model Rain:</span>
+                  <span style={{ fontWeight: '700', color: '#f8fafc' }}>{f.precipitation.toFixed(1)} mm</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginTop: '2px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Model Temp:</span>
+                  <span style={{ fontWeight: '700', color: '#f8fafc' }}>{f.temperature.toFixed(1)} °C</span>
+                </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginTop: '2px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Model Temp:</span>
-                <span style={{ fontWeight: '700', color: '#f8fafc' }}>{f.temperature.toFixed(1)} °C</span>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Group 2: EXTENDED PROVIDER REGISTRY CARDS */}
+      <div>
+        <div style={{ fontSize: '11px', fontWeight: '800', color: '#fbbf24', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>○</span> EXTENDED PROVIDER REGISTRY (Architecture Preview &amp; Spread Assessment — Excluded from Blend)
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+          {extendedForecasts.map((f) => {
+            const isBfs = f.model_id === 'bharat_fs';
+            const isAifs = f.model_id === 'ecmwf_aifs';
+            const styleInfo = modelColorMap[f.model_id] || { color: '#ffffff', bg: 'rgba(255,255,255,0.1)', border: 'rgba(255,255,255,0.2)' };
+            
+            const badgeText = isBfs 
+              ? 'VALIDATION PENDING' 
+              : (isAifs ? 'OPERATIONAL PROXY' : 'REGISTERED ENSEMBLE');
+            const badgeColor = isBfs ? '#fb923c' : (isAifs ? '#c084fc' : '#94a3b8');
+            const badgeBg = isBfs ? 'rgba(249, 115, 22, 0.2)' : (isAifs ? 'rgba(168, 85, 247, 0.2)' : 'rgba(148, 163, 184, 0.2)');
+
+            return (
+              <div
+                key={f.model_id}
+                style={{
+                  background: 'rgba(13, 19, 34, 0.4)',
+                  border: `1px solid rgba(255, 255, 255, 0.08)`,
+                  borderRadius: '10px',
+                  padding: '12px',
+                  position: 'relative',
+                  opacity: 0.85
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: styleInfo.color, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {isBfs && <span>🇮🇳</span>}
+                    {f.model_name}
+                  </span>
+                  <span style={{
+                    fontSize: '9px',
+                    fontWeight: '700',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    background: badgeBg,
+                    color: badgeColor,
+                    border: `1px solid ${badgeColor}44`
+                  }}>
+                    {badgeText}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: '700', color: '#94a3b8' }}>
+                    —
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>excluded from validated blend</span>
+                </div>
+
+                <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Forecast Rain:</span>
+                  <span style={{ fontWeight: '700', color: '#cbd5e1' }}>{f.precipitation.toFixed(1)} mm</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginTop: '2px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Forecast Temp:</span>
+                  <span style={{ fontWeight: '700', color: '#cbd5e1' }}>{f.temperature.toFixed(1)} °C</span>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

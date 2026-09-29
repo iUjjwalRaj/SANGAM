@@ -72,7 +72,7 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
             </h1>
 
             <p style={{ fontSize: '14px', color: '#cbd5e1', margin: 0, maxWidth: '900px', lineHeight: '1.5' }}>
-              <b>"Context-aware dynamic weighting of multiple weather forecasting systems."</b> Rather than trusting any single model, SANGAM continuously optimizes model weights based on lead time, spatial terrain, and atmospheric regimes.
+              <b>"Context-aware dynamic weighting of multiple weather forecasting systems."</b> Rather than trusting any single model, SANGAM continuously optimizes model weights based on lead time, geographic coordinates, model disagreement, and atmospheric regimes.
             </p>
           </div>
 
@@ -142,7 +142,7 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
               </span>
             </div>
             <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0, lineHeight: '1.45' }}>
-              Multiple forecasting systems provide different estimates. Spread between forecasts reveals physical uncertainty and regime vulnerability.
+              Multiple forecasting systems provide different estimates. Differences between forecasts provide an important model-disagreement signal for uncertainty assessment.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
               </span>
             </div>
             <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0, lineHeight: '1.45' }}>
-              SANGAM learns how much to trust each model for the current context (lead time, moisture convergence, terrain, and inter-model consensus).
+              SANGAM learns how much to trust each model for the current context (lead time, geographic coordinates, model disagreement, and atmospheric regime).
             </p>
           </div>
 

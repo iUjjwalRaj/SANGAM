@@ -47,67 +47,78 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
         return {
           displayName: 'ECMWF IFS',
           resolution: '0.25° (~27 km)',
-          status: 'Track B Validated',
+          track: 'VALIDATED SANGAM TRACK',
+          status: 'HISTORICALLY VALIDATED (Track B)',
           statusBadgeColor: '#10b981',
           statusBg: 'rgba(16, 185, 129, 0.15)',
-          note: 'Authoritative Phase 3 benchmark candidate'
+          note: 'Authoritative 0.25° NWP benchmark member'
         };
       case 'noaa_gfs':
         return {
           displayName: 'NOAA GFS',
           resolution: '0.25° (~27 km)',
-          status: 'Track B Validated',
+          track: 'VALIDATED SANGAM TRACK',
+          status: 'HISTORICALLY VALIDATED (Track B)',
           statusBadgeColor: '#10b981',
           statusBg: 'rgba(16, 185, 129, 0.15)',
-          note: 'Authoritative Phase 3 benchmark candidate'
+          note: 'Authoritative 0.25° NWP benchmark member'
         };
       case 'dwd_icon':
         return {
           displayName: 'DWD ICON',
           resolution: '0.25° (~27 km)',
-          status: 'Track B Validated',
+          track: 'VALIDATED SANGAM TRACK',
+          status: 'HISTORICALLY VALIDATED (Track B)',
           statusBadgeColor: '#10b981',
           statusBg: 'rgba(16, 185, 129, 0.15)',
-          note: 'Authoritative Phase 3 benchmark candidate'
+          note: 'Authoritative 0.25° NWP benchmark member'
         };
       case 'bharat_fs':
         return {
           displayName: '🇮🇳 BharatFS',
           resolution: '6 km (TCo grid)',
-          status: 'Validation Pending Archive',
+          track: 'EXTENDED PROVIDER REGISTRY',
+          status: 'VALIDATION PENDING ARCHIVE',
           statusBadgeColor: '#f59e0b',
           statusBg: 'rgba(245, 158, 11, 0.15)',
-          note: 'Architecture supported; no historical score implied'
+          note: 'Architecture supported; historical validation pending reproducible archive'
         };
       case 'ecmwf_aifs':
         return {
           displayName: 'ECMWF AIFS',
           resolution: '0.25° (AI Emulator)',
-          status: 'Track B Retrospective Excluded',
+          track: 'EXTENDED PROVIDER REGISTRY',
+          status: 'OPERATIONAL PROXY (Track B Excluded)',
           statusBadgeColor: '#818cf8',
           statusBg: 'rgba(129, 140, 248, 0.15)',
-          note: 'Operational proxy only; excluded from retrospective benchmark'
+          note: 'Operational proxy only; retrospective benchmark excluded'
         };
       case 'ensemble':
         return {
-          displayName: 'HGEFS Ensemble',
+          displayName: 'HGEFS / Global Ensemble',
           resolution: '0.5° (Ensemble)',
-          status: 'Registered Multi-Model',
+          track: 'EXTENDED PROVIDER REGISTRY',
+          status: 'REGISTERED ENSEMBLE (Not in Benchmark)',
           statusBadgeColor: '#94a3b8',
           statusBg: 'rgba(148, 163, 184, 0.15)',
-          note: 'Spread and outlier dampening'
+          note: 'Multi-model spread and disagreement assessment'
         };
       default:
         return {
           displayName: modelId,
           resolution: 'Standard',
+          track: 'EXTENDED PROVIDER REGISTRY',
           status: 'Registered',
           statusBadgeColor: '#94a3b8',
           statusBg: 'rgba(148, 163, 184, 0.15)',
-          note: 'Integrated NWP model'
+          note: 'Integrated weather model'
         };
     }
   };
+
+  const VALIDATED_IDS = ['ecmwf_ifs', 'noaa_gfs', 'dwd_icon'];
+  const validatedForecasts = forecasts.filter(f => VALIDATED_IDS.includes(f.model_id));
+  const extendedForecasts = forecasts.filter(f => !VALIDATED_IDS.includes(f.model_id));
 
   return (
     <div className="glass-panel" style={{ padding: '20px', marginBottom: '22px' }}>
@@ -174,7 +185,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
             borderBottom: activeTab === 'table' ? '2px solid #00f0ff' : '2px solid transparent'
           }}
         >
-          Detailed Audit Table (Part 4)
+          Detailed Audit Table (Track Separation)
         </button>
         <button
           onClick={() => setActiveTab('bars')}
@@ -223,7 +234,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
               </tr>
             </thead>
             <tbody>
-              {/* SANGAM Consensus Row */}
+              {/* SANGAM Dynamic Consensus Row */}
               <tr style={{
                 background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%)',
                 borderBottom: '1px solid rgba(0, 240, 255, 0.3)',
@@ -235,10 +246,10 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                 <td style={{ padding: '10px', color: '#00f0ff', fontSize: '13px' }}>
                   {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
                 </td>
-                <td style={{ padding: '10px', color: '#94a3b8' }}>Adaptive</td>
+                <td style={{ padding: '10px', color: '#94a3b8' }}>Adaptive (0.25°)</td>
                 <td style={{ padding: '10px' }}>
-                  <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '3px', background: 'rgba(0, 240, 255, 0.15)', color: '#00f0ff' }}>
-                    PROPOSED ML BLENDER
+                  <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: '3px', background: 'rgba(0, 240, 255, 0.15)', color: '#00f0ff', fontWeight: '700' }}>
+                    VALIDATED BENCHMARK BLEND
                   </span>
                 </td>
                 <td style={{ padding: '10px', textAlign: 'right', color: '#00f0ff' }}>100.0%</td>
@@ -247,15 +258,21 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                 </td>
               </tr>
 
-              {/* Individual Models */}
-              {forecasts.map((f) => {
+              {/* Group 1: VALIDATED SANGAM TRACK */}
+              <tr style={{ background: 'rgba(16, 185, 129, 0.08)', borderTop: '1px solid rgba(16, 185, 129, 0.3)', borderBottom: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                <td colSpan={6} style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', color: '#34d399', letterSpacing: '0.4px', textTransform: 'uppercase' }}>
+                  VALIDATED SANGAM TRACK — Primary Quantitative Benchmark Models (IFS + GFS + ICON)
+                </td>
+              </tr>
+
+              {validatedForecasts.map((f) => {
                 const meta = getModelMetadata(f.model_id);
                 const val = (f as any)[activeVar] || 0;
-                const rawWeight = weights[f.model_id] ?? (1.0 / Math.max(1, forecasts.length));
+                const rawWeight = weights[f.model_id] ?? 0.0;
                 const contribution = rawWeight * val;
 
                 return (
-                  <tr key={f.model_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                  <tr key={f.model_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: 'rgba(255, 255, 255, 0.01)' }}>
                     <td style={{ padding: '10px', fontWeight: '600', color: '#f1f5f9' }}>
                       {meta.displayName}
                     </td>
@@ -287,17 +304,73 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
                   </tr>
                 );
               })}
+
+              {/* Group 2: EXTENDED PROVIDER REGISTRY */}
+              <tr style={{ background: 'rgba(245, 158, 11, 0.08)', borderTop: '1px solid rgba(245, 158, 11, 0.3)', borderBottom: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                <td colSpan={6} style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', color: '#fbbf24', letterSpacing: '0.4px', textTransform: 'uppercase' }}>
+                  EXTENDED PROVIDER REGISTRY — Architecture Integrations &amp; Candidate Models (Excluded from Validated Benchmark Blend)
+                </td>
+              </tr>
+
+              {extendedForecasts.map((f) => {
+                const meta = getModelMetadata(f.model_id);
+                const val = (f as any)[activeVar] || 0;
+
+                return (
+                  <tr key={f.model_id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', opacity: 0.9 }}>
+                    <td style={{ padding: '10px', fontWeight: '600', color: '#e2e8f0' }}>
+                      {meta.displayName}
+                    </td>
+                    <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '13px', color: '#cbd5e1' }}>
+                      {val.toFixed(1)} {unitMap[activeVar]}
+                    </td>
+                    <td style={{ padding: '10px', color: '#94a3b8', fontSize: '11px' }}>
+                      {meta.resolution}
+                    </td>
+                    <td style={{ padding: '10px' }}>
+                      <span style={{
+                        fontSize: '10px',
+                        fontWeight: '700',
+                        padding: '2px 6px',
+                        borderRadius: '3px',
+                        background: meta.statusBg,
+                        color: meta.statusBadgeColor,
+                        border: `1px solid ${meta.statusBadgeColor}44`
+                      }}>
+                        {meta.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: '#94a3b8', fontStyle: 'italic' }}>
+                      — (Registry Only)
+                    </td>
+                    <td style={{ padding: '10px', textAlign: 'right', fontFamily: 'monospace', color: '#94a3b8', fontStyle: 'italic' }}>
+                      — (Not in Blend)
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
-          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px', fontStyle: 'italic' }}>
-            Note: BharatFS weight is assigned via uniform baseline prior; status does not imply validated historical skill.
-          </p>
+
+          {/* Explicit Protocol Clarification Note */}
+          <div style={{
+            background: 'rgba(7, 10, 18, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '6px',
+            padding: '10px 14px',
+            marginTop: '12px',
+            fontSize: '11px',
+            color: '#cbd5e1',
+            lineHeight: '1.5'
+          }}>
+            <b style={{ color: '#00f0ff' }}>Audited Validation Separation:</b> The authoritative quantitative SANGAM blend and historical benchmark use strictly <b>ECMWF IFS + NOAA GFS + DWD ICON</b>. BharatFS, AIFS, and HGEFS are integrated in the Extended Provider Registry for architectural readiness, operational monitoring, and spread assessment; their registry membership does not alter the validated benchmark results or imply retrospective skill.
+          </div>
         </div>
       )}
 
       {/* Tab 2: Visual Bar Comparison */}
       {activeTab === 'bars' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {/* SANGAM Blended Result */}
           <div style={{
             background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%)',
@@ -307,7 +380,7 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
               <span style={{ fontSize: '13px', fontWeight: '800', color: '#00f0ff', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <CheckCircle2 size={14} /> SANGAM Dynamic Blended Consensus
+                <CheckCircle2 size={14} /> SANGAM Dynamic Blended Consensus (IFS + GFS + ICON)
               </span>
               <span style={{ fontSize: '14px', fontWeight: '800', color: '#00f0ff' }}>
                 {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
@@ -322,43 +395,101 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
             </div>
           </div>
 
-          {/* Individual Models */}
-          {forecasts.map((f) => {
-            const val = (f as any)[activeVar] || 0;
-            const pct = Math.min(100, (val / maxVal) * 100);
-            const isBfs = f.model_id === 'bharat_fs' || f.model_name?.toLowerCase().includes('bharat');
-            const meta = getModelMetadata(f.model_id);
+          {/* Validated Track Sub-Section */}
+          <div>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#34d399', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px' }}>
+              VALIDATED SANGAM TRACK (Contributing to Blend)
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {validatedForecasts.map((f) => {
+                const val = (f as any)[activeVar] || 0;
+                const pct = Math.min(100, (val / maxVal) * 100);
+                const meta = getModelMetadata(f.model_id);
+                const w = weights[f.model_id] ?? 0.0;
 
-            return (
-              <div key={f.model_id} style={{ padding: '6px 4px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ color: isBfs ? '#ff9933' : 'var(--text-secondary)', fontWeight: '600' }}>
-                      {meta.displayName}
-                    </span>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>({meta.resolution})</span>
-                    <span style={{
-                      fontSize: '9px',
-                      fontWeight: '700',
-                      padding: '1px 6px',
-                      borderRadius: '3px',
-                      background: meta.statusBg,
-                      color: meta.statusBadgeColor,
-                      border: `1px solid ${meta.statusBadgeColor}44`
-                    }}>
-                      {meta.status}
-                    </span>
+                return (
+                  <div key={f.model_id} style={{ padding: '6px 8px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>
+                          {meta.displayName}
+                        </span>
+                        <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>({meta.resolution})</span>
+                        <span style={{
+                          fontSize: '9px',
+                          fontWeight: '700',
+                          padding: '1px 6px',
+                          borderRadius: '3px',
+                          background: meta.statusBg,
+                          color: meta.statusBadgeColor,
+                          border: `1px solid ${meta.statusBadgeColor}44`
+                        }}>
+                          {meta.status}
+                        </span>
+                        <span style={{ fontSize: '10px', fontWeight: '700', color: '#00f0ff' }}>
+                          [{ (w * 100).toFixed(1) }% weight]
+                        </span>
+                      </div>
+                      <span style={{ fontWeight: '700', color: '#f8fafc' }}>
+                        {val.toFixed(1)} {unitMap[activeVar]}
+                      </span>
+                    </div>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${pct}%`, height: '100%', background: '#38bdf8' }} />
+                    </div>
                   </div>
-                  <span style={{ fontWeight: '700', color: isBfs ? '#ff9933' : '#f8fafc' }}>
-                    {val.toFixed(1)} {unitMap[activeVar]}
-                  </span>
-                </div>
-                <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${pct}%`, height: '100%', background: isBfs ? '#ff9933' : '#64748b' }} />
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Extended Provider Registry Sub-Section */}
+          <div>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#fbbf24', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.4px' }}>
+              EXTENDED PROVIDER REGISTRY (Candidate Integrations — Excluded from Blend)
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {extendedForecasts.map((f) => {
+                const val = (f as any)[activeVar] || 0;
+                const pct = Math.min(100, (val / maxVal) * 100);
+                const isBfs = f.model_id === 'bharat_fs';
+                const meta = getModelMetadata(f.model_id);
+
+                return (
+                  <div key={f.model_id} style={{ padding: '6px 8px', background: 'rgba(255,255,255,0.01)', borderRadius: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ color: isBfs ? '#ff9933' : 'var(--text-secondary)', fontWeight: '600' }}>
+                          {meta.displayName}
+                        </span>
+                        <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>({meta.resolution})</span>
+                        <span style={{
+                          fontSize: '9px',
+                          fontWeight: '700',
+                          padding: '1px 6px',
+                          borderRadius: '3px',
+                          background: meta.statusBg,
+                          color: meta.statusBadgeColor,
+                          border: `1px solid ${meta.statusBadgeColor}44`
+                        }}>
+                          {meta.status}
+                        </span>
+                        <span style={{ fontSize: '10px', color: '#94a3b8', fontStyle: 'italic' }}>
+                          [Registry Only — Not in Blend]
+                        </span>
+                      </div>
+                      <span style={{ fontWeight: '700', color: isBfs ? '#ff9933' : '#cbd5e1' }}>
+                        {val.toFixed(1)} {unitMap[activeVar]}
+                      </span>
+                    </div>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${pct}%`, height: '100%', background: isBfs ? '#ff9933' : '#64748b' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
@@ -369,14 +500,14 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           <div style={{ background: 'rgba(0, 240, 255, 0.1)', border: '1px solid #00f0ff', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{ fontSize: '13px', fontWeight: '800', color: '#00f0ff' }}>
-                Proposed: SANGAM Dynamic ML Weights
+                Proposed: SANGAM Dynamic ML Weights (IFS + GFS + ICON)
               </span>
               <span style={{ fontSize: '14px', fontWeight: '800', color: '#00f0ff' }}>
                 {blendedForecast[activeVar]?.toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
             <p style={{ fontSize: '11px', color: '#94a3b8', margin: 0 }}>
-              Conditioned on lead-time decay, spatial terrain, moisture convergence, and inter-model spread entropy.
+              Conditioned on lead-time decay, geographic location, multi-model precipitation spread, and weather regime.
             </p>
           </div>
 
@@ -399,14 +530,14 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#f8fafc' }}>
-                Baseline 2: Simple Multi-Model Average (Equal 1/N weights)
+                Baseline 2: Simple Multi-Model Average (Equal 1/3 weights over IFS, GFS, ICON)
               </span>
               <span style={{ fontSize: '14px', fontWeight: '700', color: '#f8fafc' }}>
                 {getVarVal(baselines.simple_average).toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
             <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>
-              Standard unweighted ensemble mean; susceptible to outlier propagation and equal trust in biased models.
+              Standard unweighted 3-model benchmark ensemble mean; susceptible to outlier propagation and equal trust in biased models.
             </p>
           </div>
 
@@ -414,14 +545,14 @@ export const ModelComparison: React.FC<ModelComparisonProps> = ({
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '10px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#f8fafc' }}>
-                Baseline 3: Static Historical Weights
+                Baseline 3: Static Historical Weights (Track B Fixed Weights)
               </span>
               <span style={{ fontSize: '14px', fontWeight: '700', color: '#f8fafc' }}>
                 {getVarVal(baselines.static_historical_weights).toFixed(1)} {unitMap[activeVar]}
               </span>
             </div>
             <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>
-              Fixed climatological weights; does not adapt to convective regimes, moisture surges, or lead-time scaling.
+              Fixed climatological weights over validated benchmark models; does not adapt to convective regimes, precipitation surges, or lead-time scaling.
             </p>
           </div>
         </div>

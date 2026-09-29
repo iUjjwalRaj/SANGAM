@@ -105,9 +105,11 @@ class DemoProvider(WeatherModelProvider):
         r1 = self._get_pseudo_hash(seed_key + "_ifs")
         r2 = self._get_pseudo_hash(seed_key + "_aifs")
         r3 = self._get_pseudo_hash(seed_key + "_gfs")
+        r_icon = self._get_pseudo_hash(seed_key + "_icon")
         r4 = self._get_pseudo_hash(seed_key + "_ens")
 
         forecasts = [
+            # === VALIDATED BLENDING TRACK ===
             SingleModelForecast(
                 model_id="ecmwf_ifs",
                 model_name="ECMWF IFS",
@@ -120,19 +122,6 @@ class DemoProvider(WeatherModelProvider):
                 humidity=round(max(20.0, min(98.0, base["humidity"] + (r1 - 0.5) * 6.0)), 1),
                 pressure=round(base["pressure"] + (r1 - 0.5) * 2.0, 1),
                 wind_direction=round((180.0 + (r1 - 0.5) * 40.0) % 360, 1)
-            ),
-            SingleModelForecast(
-                model_id="ecmwf_aifs",
-                model_name="ECMWF AIFS",
-                model_type="AI",
-                source="ECMWF Artificial Intelligence Forecasting System (0.25°)",
-                lead_time_hours=lead_time_hours,
-                temperature=round(target_temp + (r2 - 0.5) * 1.1, 1),
-                precipitation=round(max(0.0, target_rain * (0.96 + 0.20 * (r2 - 0.4))), 1),
-                wind_speed=round(max(2.0, target_wind + (r2 - 0.5) * 2.5), 1),
-                humidity=round(max(20.0, min(98.0, base["humidity"] + (r2 - 0.5) * 5.0)), 1),
-                pressure=round(base["pressure"] + (r2 - 0.5) * 1.8, 1),
-                wind_direction=round((180.0 + (r2 - 0.5) * 35.0) % 360, 1)
             ),
             SingleModelForecast(
                 model_id="noaa_gfs",
@@ -148,18 +137,19 @@ class DemoProvider(WeatherModelProvider):
                 wind_direction=round((180.0 + (r3 - 0.5) * 50.0) % 360, 1)
             ),
             SingleModelForecast(
-                model_id="ensemble",
-                model_name="HGEFS / Global Ensemble",
-                model_type="ENSEMBLE",
-                source="Multi-Model Global Ensemble Mean & Spread",
+                model_id="dwd_icon",
+                model_name="DWD ICON",
+                model_type="NWP",
+                source="DWD ICON (0.25° Icosahedral Nonhydrostatic)",
                 lead_time_hours=lead_time_hours,
-                temperature=round(target_temp + (r4 - 0.5) * 0.9, 1),
-                precipitation=round(max(0.0, target_rain * (0.98 + 0.10 * (r4 - 0.5))), 1),
-                wind_speed=round(max(2.0, target_wind + (r4 - 0.5) * 2.0), 1),
-                humidity=round(max(20.0, min(98.0, base["humidity"] + (r4 - 0.5) * 4.0)), 1),
-                pressure=round(base["pressure"] + (r4 - 0.5) * 1.5, 1),
-                wind_direction=round((180.0 + (r4 - 0.5) * 30.0) % 360, 1)
+                temperature=round(target_temp + (r_icon - 0.45) * 1.5, 1),
+                precipitation=round(max(0.0, target_rain * (0.95 + 0.20 * (r_icon - 0.5))), 1),
+                wind_speed=round(max(2.0, target_wind + (r_icon - 0.5) * 3.2), 1),
+                humidity=round(max(20.0, min(98.0, base["humidity"] + (r_icon - 0.5) * 6.0)), 1),
+                pressure=round(base["pressure"] + (r_icon - 0.5) * 2.0, 1),
+                wind_direction=round((180.0 + (r_icon - 0.5) * 45.0) % 360, 1)
             ),
+            # === EXTENDED PROVIDER REGISTRY ===
             SingleModelForecast(
                 model_id="bharat_fs",
                 model_name="Bharat Forecast System (BharatFS)",
@@ -172,6 +162,32 @@ class DemoProvider(WeatherModelProvider):
                 humidity=round(max(20.0, min(98.0, base["humidity"] + (self._get_pseudo_hash(seed_key + "_bfs") - 0.5) * 5.0)), 1),
                 pressure=round(base["pressure"] + (self._get_pseudo_hash(seed_key + "_bfs") - 0.5) * 1.8, 1),
                 wind_direction=round((180.0 + (self._get_pseudo_hash(seed_key + "_bfs") - 0.5) * 35.0) % 360, 1)
+            ),
+            SingleModelForecast(
+                model_id="ecmwf_aifs",
+                model_name="ECMWF AIFS",
+                model_type="AI",
+                source="ECMWF Artificial Intelligence Forecasting System (0.25°)",
+                lead_time_hours=lead_time_hours,
+                temperature=round(target_temp + (r2 - 0.5) * 1.1, 1),
+                precipitation=round(max(0.0, target_rain * (0.96 + 0.20 * (r2 - 0.4))), 1),
+                wind_speed=round(max(2.0, target_wind + (r2 - 0.5) * 2.5), 1),
+                humidity=round(max(20.0, min(98.0, base["humidity"] + (r2 - 0.5) * 5.0)), 1),
+                pressure=round(base["pressure"] + (r2 - 0.5) * 1.8, 1),
+                wind_direction=round((180.0 + (r2 - 0.5) * 35.0) % 360, 1)
+            ),
+            SingleModelForecast(
+                model_id="ensemble",
+                model_name="HGEFS / Global Ensemble",
+                model_type="ENSEMBLE",
+                source="Multi-Model Global Ensemble Mean & Spread",
+                lead_time_hours=lead_time_hours,
+                temperature=round(target_temp + (r4 - 0.5) * 0.9, 1),
+                precipitation=round(max(0.0, target_rain * (0.98 + 0.10 * (r4 - 0.5))), 1),
+                wind_speed=round(max(2.0, target_wind + (r4 - 0.5) * 2.0), 1),
+                humidity=round(max(20.0, min(98.0, base["humidity"] + (r4 - 0.5) * 4.0)), 1),
+                pressure=round(base["pressure"] + (r4 - 0.5) * 1.5, 1),
+                wind_direction=round((180.0 + (r4 - 0.5) * 30.0) % 360, 1)
             )
         ]
         return forecasts, self.data_source_type
@@ -203,28 +219,40 @@ class DemoProvider(WeatherModelProvider):
                 "rmse_rainfall": round(8.4 * lead_factor * regime_penalty * 0.94, 2),
                 "mae_temp": round(1.15 * lead_factor * 0.90, 2),
                 "bias_rainfall": -0.8,
-                "overall_skill_score": round(max(0.65, 0.88 - 0.0018 * lead_time_hours), 3)
-            },
-            "ecmwf_aifs": {
-                "mae_rainfall": round(5.0 * lead_factor * regime_penalty * 0.90, 2),
-                "rmse_rainfall": round(8.1 * lead_factor * regime_penalty * 0.91, 2),
-                "mae_temp": round(1.05 * lead_factor * 0.88, 2),
-                "bias_rainfall": 0.2,
-                "overall_skill_score": round(max(0.68, 0.91 - 0.0014 * lead_time_hours), 3)
+                "overall_skill_score": round(max(0.65, 0.88 - 0.0018 * lead_time_hours), 3),
+                "validation_status": "HISTORICALLY VALIDATED (Track B)"
             },
             "noaa_gfs": {
                 "mae_rainfall": round(6.5 * lead_factor * regime_penalty * 1.08, 2),
                 "rmse_rainfall": round(10.2 * lead_factor * regime_penalty * 1.06, 2),
                 "mae_temp": round(1.35 * lead_factor * 1.05, 2),
                 "bias_rainfall": 1.4,
-                "overall_skill_score": round(max(0.60, 0.82 - 0.0022 * lead_time_hours), 3)
+                "overall_skill_score": round(max(0.60, 0.82 - 0.0022 * lead_time_hours), 3),
+                "validation_status": "HISTORICALLY VALIDATED (Track B)"
+            },
+            "dwd_icon": {
+                "mae_rainfall": round(5.8 * lead_factor * regime_penalty * 1.02, 2),
+                "rmse_rainfall": round(9.1 * lead_factor * regime_penalty * 1.01, 2),
+                "mae_temp": round(1.22 * lead_factor * 0.98, 2),
+                "bias_rainfall": 0.4,
+                "overall_skill_score": round(max(0.62, 0.84 - 0.0020 * lead_time_hours), 3),
+                "validation_status": "HISTORICALLY VALIDATED (Track B)"
+            },
+            "ecmwf_aifs": {
+                "mae_rainfall": round(5.0 * lead_factor * regime_penalty * 0.90, 2),
+                "rmse_rainfall": round(8.1 * lead_factor * regime_penalty * 0.91, 2),
+                "mae_temp": round(1.05 * lead_factor * 0.88, 2),
+                "bias_rainfall": 0.2,
+                "overall_skill_score": round(max(0.68, 0.91 - 0.0014 * lead_time_hours), 3),
+                "validation_status": "OPERATIONAL PROXY (Track B Excluded)"
             },
             "ensemble": {
                 "mae_rainfall": round(5.4 * lead_factor * regime_penalty * 0.95, 2),
                 "rmse_rainfall": round(8.3 * lead_factor * regime_penalty * 0.93, 2),
                 "mae_temp": round(1.10 * lead_factor * 0.91, 2),
                 "bias_rainfall": 0.1,
-                "overall_skill_score": round(max(0.67, 0.86 - 0.0015 * lead_time_hours), 3)
+                "overall_skill_score": round(max(0.67, 0.86 - 0.0015 * lead_time_hours), 3),
+                "validation_status": "REGISTERED ENSEMBLE (Not Part of Benchmark)"
             },
             "bharat_fs": {
                 "mae_rainfall": 0.0,
@@ -232,6 +260,6 @@ class DemoProvider(WeatherModelProvider):
                 "mae_temp": 0.0,
                 "bias_rainfall": 0.0,
                 "overall_skill_score": 0.82,
-                "validation_status": "HISTORICAL_VALIDATION_PENDING"
+                "validation_status": "HISTORICAL VALIDATION PENDING"
             }
         }

@@ -33,12 +33,21 @@ def test_api_models():
     for expected in expected_models:
         assert expected in model_ids, f"Missing model: {expected}"
     
-    # 2. Verify validation status distinctions
+    # 2. Verify validation status distinctions and tracks
     models_by_id = {m["id"]: m for m in data}
     assert "HISTORICALLY VALIDATED (Track B)" in models_by_id["ecmwf_ifs"]["validation_status"]
     assert "HISTORICALLY VALIDATED (Track B)" in models_by_id["noaa_gfs"]["validation_status"]
     assert "HISTORICALLY VALIDATED (Track B)" in models_by_id["dwd_icon"]["validation_status"]
     assert "OPERATIONAL PROXY" in models_by_id["ecmwf_aifs"]["validation_status"]
+    assert "REGISTERED ENSEMBLE" in models_by_id["ensemble"]["validation_status"]
+
+    # Verify track taxonomy: Validated Track vs Extended Provider Registry
+    assert models_by_id["ecmwf_ifs"]["track"] == "VALIDATED SANGAM TRACK"
+    assert models_by_id["noaa_gfs"]["track"] == "VALIDATED SANGAM TRACK"
+    assert models_by_id["dwd_icon"]["track"] == "VALIDATED SANGAM TRACK"
+    assert models_by_id["bharat_fs"]["track"] == "EXTENDED PROVIDER REGISTRY"
+    assert models_by_id["ecmwf_aifs"]["track"] == "EXTENDED PROVIDER REGISTRY"
+    assert models_by_id["ensemble"]["track"] == "EXTENDED PROVIDER REGISTRY"
     
     # 3. Verify Bharat Forecast System (BharatFS) provenance and citations
     bfs = models_by_id["bharat_fs"]
@@ -64,16 +73,29 @@ def test_api_forecast_pipeline():
     assert "weights" in data
     assert "weights" in data["weights"]
     
-    # Mathematical verification
+    # Mathematical verification: Exactly IFS, GFS, ICON in validated blend
     weights = data["weights"]["weights"]
+    assert set(weights.keys()) == {"ecmwf_ifs", "noaa_gfs", "dwd_icon"}, f"Unexpected models in weights: {weights.keys()}"
     assert abs(sum(weights.values()) - 1.0) < 1e-3
+    assert all(w >= 0.0 for w in weights.values())
+    
+    # Confirm Extended Registry models are excluded from the validated blend weights
+    assert "bharat_fs" not in weights
+    assert "ecmwf_aifs" not in weights
+    assert "ensemble" not in weights
+    
+    # Metadata audit
+    meta = data["system_metadata"]
+    assert meta["validated_track_models"] == ["ecmwf_ifs", "noaa_gfs", "dwd_icon"]
+    assert "bharat_fs" in meta["extended_registry_models"]
+    assert meta["blend_policy"] == "VALIDATED_TRACK_ONLY (IFS + GFS + ICON)"
     
     # Baselines
     assert "baselines" in data
     assert "sangam_dynamic_blended" in data["baselines"]
     
     # Explainability
-    assert len(data["explainability"]) > 0
+    assert len(data["explainability"]) == 3  # Exactly 3 validated models explained
     assert "primary_reasons" in data["explainability"][0]
 
 def test_api_verification():

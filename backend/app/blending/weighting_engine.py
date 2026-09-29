@@ -185,7 +185,7 @@ class AIWeightingEngine:
                 elif mid == "ecmwf_ifs":
                     b = reg_cfg.get("ifs_moisture_bonus", 0.15)
                     adj += b
-                    r_list.append(f"[Domain Prior] ECMWF IFS boundary-layer moisture convergence (+{b:.2f}).")
+                    r_list.append(f"[Domain Prior] ECMWF IFS synoptic rainfall accuracy (+{b:.2f}).")
                 elif mid == "noaa_gfs":
                     p = reg_cfg.get("gfs_convective_bias_penalty", -0.10)
                     adj += p

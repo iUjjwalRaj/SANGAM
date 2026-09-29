@@ -53,6 +53,8 @@ async def list_models() -> List[Dict[str, Any]]:
     """Returns metadata for all integrated NWP, AI, and Ensemble weather models."""
     return system_config.get("models", [])
 
+VALIDATED_MODEL_IDS = {"ecmwf_ifs", "noaa_gfs", "dwd_icon"}
+
 @router.get("/forecast", response_model=ForecastResponse)
 async def get_forecast(
     lat: float = Query(28.6139, ge=-90.0, le=90.0, description="Latitude"),
@@ -63,8 +65,15 @@ async def get_forecast(
 ) -> ForecastResponse:
     """
     Primary SANGAM end-to-end pipeline endpoint:
-    Data Ingestion -> Feature Extraction -> Regime Classification ->
+    Data Ingestion -> Track Separation -> Feature Extraction -> Regime Classification ->
     Dynamic Weighting Engine -> Forecast Blending -> Uncertainty -> Extreme Events.
+
+    STRICT VALIDATION CONTRACT:
+    The authoritative SANGAM multi-model blend uses exclusively the Validated Track:
+    ECMWF IFS + NOAA GFS + DWD ICON.
+    Extended models (BharatFS, AIFS, HGEFS) are integrated in the Provider Registry
+    for architecture display, operational proxy, and spread assessment, but do not
+    alter the quantitative benchmark blend.
     """
     var_str = str(variable.default if hasattr(variable, 'default') else variable)
     loc_meta = get_location_by_coords(lat, lon)
@@ -79,57 +88,67 @@ async def get_forecast(
     )
 
     # 1. Ingestion: multi-model forecasts + atmospheric state
-    forecasts, atm_state, data_source, skills = await provider_manager.get_forecast_and_state(
+    all_forecasts, atm_state, data_source, skills = await provider_manager.get_forecast_and_state(
         lat=lat, lon=lon, lead_time_hours=lead_time, forced_mode=mode
     )
 
-    # 2. Weather Regime Classification
-    regime = WeatherRegimeClassifier.classify(atm_state, forecasts)
+    # 2. Strict Track Separation: VALIDATED BLENDING TRACK vs EXTENDED PROVIDER REGISTRY
+    validated_forecasts = [f for f in all_forecasts if f.model_id in VALIDATED_MODEL_IDS]
+    extended_forecasts = [f for f in all_forecasts if f.model_id not in VALIDATED_MODEL_IDS]
 
-    # 3. Feature Extraction & Disagreement calculation
+    # Blending operates strictly over the 3 validated benchmark models
+    blending_forecasts = validated_forecasts if validated_forecasts else all_forecasts
+
+    # 3. Weather Regime Classification
+    regime = WeatherRegimeClassifier.classify(atm_state, blending_forecasts)
+
+    # 4. Feature Extraction & Disagreement calculation (calculated on validated track)
     features, disagreement = FeatureEngineer.extract_features(
         location=location,
         lead_time_hours=lead_time,
         atm_state=atm_state,
-        forecasts=forecasts,
+        forecasts=blending_forecasts,
         historical_skills=skills,
         regime=regime
     )
 
-    # 4. AI Weighting Engine
+    # 5. AI Weighting Engine (VALIDATED BLEND ONLY: IFS + GFS + ICON)
     weights, explainability = weighting_engine.calculate_weights(
         features=features,
-        forecasts=forecasts,
+        forecasts=blending_forecasts,
         regime=regime,
         variable=var_str
     )
 
-    # 5. Multi-Model Forecast Blending & Baseline comparisons
+    # 6. Multi-Model Forecast Blending & Baseline comparisons (VALIDATED BLEND ONLY)
     blended_forecast, baselines = blender.blend(
-        forecasts=forecasts,
+        forecasts=blending_forecasts,
         weights=weights,
         historical_skills=skills
     )
 
-    # 6. Uncertainty Quantification
+    # 7. Uncertainty Quantification
     uncertainty = uncertainty_engine.calculate_uncertainty(
-        forecasts=forecasts,
+        forecasts=blending_forecasts,
         blended_forecast=blended_forecast,
         weights=weights,
         disagreement=disagreement,
         lead_time_hours=lead_time
     )
 
-    # 7. Extreme Event Early Guidance
+    # 8. Extreme Event Early Guidance
     extreme_alerts = extreme_event_detector.detect_events(
         blended_forecast=blended_forecast,
-        forecasts=forecasts,
+        forecasts=blending_forecasts,
         disagreement=disagreement,
         location=location,
         lead_time_hours=lead_time
     )
 
     target_time = (datetime.now(timezone.utc) + timedelta(hours=lead_time)).isoformat()
+
+    # Ordered models: Validated Track first, then Extended Provider Registry
+    ordered_forecasts = validated_forecasts + extended_forecasts
 
     return ForecastResponse(
         location=location,
@@ -138,7 +157,7 @@ async def get_forecast(
         data_source=data_source,
         weather_regime=regime,
         current_atmospheric_state=atm_state,
-        model_forecasts=forecasts,
+        model_forecasts=ordered_forecasts,
         weights=weights,
         blended_forecast=blended_forecast,
         baselines=baselines,
@@ -149,7 +168,10 @@ async def get_forecast(
             "disagreement_index": disagreement.disagreement_index,
             "precip_spread_max_min": disagreement.precip_spread_max_min,
             "pipeline_version": "1.0-alpha",
-            "blending_algorithm": "Dynamic Softmax ML Gradient Attribution"
+            "blending_algorithm": "Dynamic Softmax ML Gradient Attribution",
+            "validated_track_models": [f.model_id for f in validated_forecasts],
+            "extended_registry_models": [f.model_id for f in extended_forecasts],
+            "blend_policy": "VALIDATED_TRACK_ONLY (IFS + GFS + ICON)"
         }
     )
 

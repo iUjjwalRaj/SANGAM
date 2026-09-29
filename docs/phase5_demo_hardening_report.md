@@ -27,8 +27,8 @@ Phase 5 hardens the presentation, explainability, user experience, and demonstra
 - **Primary Title**: SANGAM | Hybrid AI–NWP Multi-Model Forecast Blending System
 - **Subtitle**: *"Context-aware dynamic weighting of multiple weather forecasting systems."*
 - **Three Foundational Cards**:
-  1. **MODEL DISAGREEMENT**: *"Multiple forecasting systems provide different estimates. Spread between forecasts reveals physical uncertainty and regime vulnerability."*
-  2. **DYNAMIC WEIGHTS**: *"SANGAM learns how much to trust each model for the current context (lead time, moisture convergence, terrain, and inter-model consensus)."*
+  1. **MODEL DISAGREEMENT**: *"Multiple forecasting systems provide different estimates. Differences between forecasts provide an important model-disagreement signal for uncertainty assessment."*
+  2. **DYNAMIC WEIGHTS**: *"SANGAM learns how much to trust each model for the current context (lead time, geographic coordinates, model disagreement, and atmospheric regime)."*
   3. **BLENDED FORECAST**: *"The final forecast combines the model outputs using normalized non-negative weights ($\sum w_i = 1.0, w_i \ge 0$) with quantified uncertainty bounds."*
 - **Permanently Visible Scope Banner**:
   `SCIENTIFIC VALIDATION SCOPE: 41-day historical sample • 5 locations • Summer monsoon 2024 • 1,800 held-out test instances • ERA5 reanalysis reference`
@@ -41,7 +41,7 @@ Phase 5 hardens the presentation, explainability, user experience, and demonstra
 ### 1.3 End-to-End Visual Blending Pipeline ([`PipelineFlow.tsx`](file:///Users/ujjwalraj/Desktop/SANGAM/frontend/src/components/PipelineFlow.tsx))
 - An 8-step visual architecture flow:
   1. *Current Atmospheric State* (Surface weather estimate)
-  2. *Multi-Model Ingestion* (Visual separation between Track B Validated vs. Additional Integrated Systems)
+  2. *Multi-Model Ingestion* (Visual separation between Validated Track vs. Extended Provider Registry)
   3. *Feature Extraction* (Disagreement spread, lead time, spatial biome)
   4. *AI Weighting Engine* (LightGBM context reliability)
   5. *Dynamic Weights* ($\sum w_i = 1.0, w_i \ge 0$)
@@ -56,13 +56,14 @@ Phase 5 hardens the presentation, explainability, user experience, and demonstra
 
 ### 2.1 Feature Group Transparency ([`ExplainabilityPanel.tsx`](file:///Users/ujjwalraj/Desktop/SANGAM/frontend/src/components/ExplainabilityPanel.tsx))
 - In strict adherence to Part 5, **no fabricated SHAP values or fake importance percentages are displayed**.
-- Instead, the panel displays the **actual feature inputs** evaluated by the weighting engine:
-  1. *Lead Time*: e.g. T+24h, T+48h, T+72h
-  2. *Geographic Coordinates*: Latitude and Longitude
-  3. *Model Disagreement Spread*: Rain spread (±mm) and temperature spread (±°C)
-  4. *Ensemble Statistics*: Ensemble mean and sample standard deviation ($\sigma$)
-  5. *Atmospheric Regime*: Real-time classified synoptic state (Normal, Heavy Rain, Heatwave, Squall, etc.)
-  6. *Skill Priors*: Historical track B baseline skill scores
+- Every displayed feature corresponds to an **actual feature input evaluated by the current weighting engine**:
+  1. *Lead Time*: e.g. T+24h, T+48h, T+72h (passed to LightGBM and heuristics)
+  2. *Geographic Coordinates*: Latitude and Longitude (passed to LightGBM 9-feature model)
+  3. *Precipitation Disagreement Spread*: Max-min spread (passed to LightGBM and heuristics)
+  4. *Spread Standard Deviation*: Sample dispersion $\sigma$ (passed to LightGBM 9-feature model)
+  5. *Model Precipitation Inputs & Mean*: IFS, GFS, ICON individual values and mean
+  6. *Classified Weather Regime*: Monsoonal regime for domain heuristic adjustments
+- Features not actually passed to the weighting model (such as physical moisture convergence, terrain orography, or retrospective skill priors) are **strictly excluded** from the explanation display.
 - Core explanation text displayed:
   > *"SANGAM dynamically adjusts model weights using forecast characteristics, model disagreement, lead time, and contextual features."*
 
@@ -76,20 +77,40 @@ Phase 5 hardens the presentation, explainability, user experience, and demonstra
 
 ## 3. Multi-Model Comparison & Contribution Audit
 
-### 3.1 Detailed Model Comparison Table ([`ModelComparison.tsx`](file:///Users/ujjwalraj/Desktop/SANGAM/frontend/src/components/ModelComparison.tsx))
-Per Part 4, every model is audited with distinct validation statuses, resolutions, dynamic weights, and blended contributions:
+### 3.1 Validated Track vs Extended Provider Registry
 
-| Model | Forecast Value | Resolution | Validation Status | Dynamic Weight ($w_i$) | Blended Contribution ($w_i \times F_i$) |
+To ensure it is impossible for a judge to mistake registry membership for quantitative validation, SANGAM establishes a strict conceptual and architectural boundary:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   VALIDATED SANGAM TRACK (Quantitative Benchmark)       │
+│                   • ECMWF IFS (0.25° NWP)                              │
+│                   • NOAA GFS (0.25° FV3 NWP)                           │
+│                   • DWD ICON (0.25° Nonhydrostatic NWP)                │
+│                   Participates in: Dynamic Blend, Baselines, Metrics   │
+└────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                   EXTENDED PROVIDER REGISTRY (Candidate Integrations)   │
+│                   • BharatFS (6 km TCo Grid — Validation Pending)      │
+│                   • ECMWF AIFS (0.25° AI Emulator — Proxy Only)         │
+│                   • HGEFS (0.5° Multi-Model Ensemble — Spread Signal)   │
+│                   Excluded from: Validated Benchmark Dynamic Weights   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Detailed Model Taxonomy & Weights Audit:
+
+| Group | Model | Resolution | Validation Status | Dynamic Weight ($w_i$) | Blended Contribution ($w_i \times F_i$) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **SANGAM Consensus** | Blended Total | Adaptive | `PROPOSED ML BLENDER` | 100.0% | Complete Synthesis |
-| **ECMWF IFS** | Raw Value | 0.25° (~27 km) | `Track B Validated` | Dynamic % | $w_{\text{IFS}} \times F_{\text{IFS}}$ |
-| **NOAA GFS** | Raw Value | 0.25° (~27 km) | `Track B Validated` | Dynamic % | $w_{\text{GFS}} \times F_{\text{GFS}}$ |
-| **DWD ICON** | Raw Value | 0.25° (~27 km) | `Track B Validated` | Dynamic % | $w_{\text{ICON}} \times F_{\text{ICON}}$ |
-| **🇮🇳 BharatFS** | Raw Value | 6 km (TCo grid) | `Validation Pending Archive` | Baseline Prior | $w_{\text{BFS}} \times F_{\text{BFS}}$ |
-| **ECMWF AIFS** | Raw Value | 0.25° (AI Emulator) | `Track B Retrospective Excluded` | Dynamic % | $w_{\text{AIFS}} \times F_{\text{AIFS}}$ |
-| **HGEFS Ensemble** | Raw Value | 0.5° (Ensemble) | `Registered Multi-Model` | Dynamic % | $w_{\text{ENS}} \times F_{\text{ENS}}$ |
-
-*Note: BharatFS weight is assigned via uniform baseline prior; status does not imply validated historical skill.*
+| **SANGAM Consensus** | Consensus Total | Adaptive (0.25°) | `VALIDATED BENCHMARK BLEND` | **100.0%** | Full Benchmark Synthesis |
+| **Validated Track** | ECMWF IFS | 0.25° (~27 km) | `HISTORICALLY VALIDATED (Track B)` | Dynamic % | $w_{\text{IFS}} \times F_{\text{IFS}}$ |
+| **Validated Track** | NOAA GFS | 0.25° (~27 km) | `HISTORICALLY VALIDATED (Track B)` | Dynamic % | $w_{\text{GFS}} \times F_{\text{GFS}}$ |
+| **Validated Track** | DWD ICON | 0.25° (~27 km) | `HISTORICALLY VALIDATED (Track B)` | Dynamic % | $w_{\text{ICON}} \times F_{\text{ICON}}$ |
+| **Extended Registry** | 🇮🇳 BharatFS | 6 km (TCo grid) | `VALIDATION PENDING ARCHIVE` | — *(Registry Only)* | — *(Not in Blend)* |
+| **Extended Registry** | ECMWF AIFS | 0.25° (AI Emulator) | `OPERATIONAL PROXY (Track B Excluded)` | — *(Registry Only)* | — *(Not in Blend)* |
+| **Extended Registry** | HGEFS Ensemble | 0.5° (Ensemble) | `REGISTERED ENSEMBLE (Not in Benchmark)` | — *(Registry Only)* | — *(Not in Blend)* |
 
 ---
 
@@ -131,33 +152,34 @@ The authoritative benchmark figures in [`VerificationModal.tsx`](file:///Users/u
 ### 7.1 Backend Automated Tests
 ```bash
 python3 -m pytest backend/tests -v
-# Result: 18 passed in 1.74s (100% pass rate)
+# Result: 18 passed in 1.36s (100% pass rate)
+# Asserts:
+# - Validated track models (IFS, GFS, ICON) receive dynamic weights summing to exactly 1.0
+# - Extended models (BFS, AIFS, HGEFS) do not receive blend weights
+# - Non-negative weight bounds enforced across all models
+# - Model registry track taxonomy properly declared
 ```
 
 ### 7.2 Frontend Production Build
 ```bash
 cd frontend && npm run build
-# Result: Built cleanly in 362ms with zero TypeScript errors
+# Result: Built cleanly in 334ms with zero TypeScript errors
 ```
-
-### 7.3 End-to-End Demo Flow Smoke Test
-Executed a 12-step programmatic smoke test simulating the entire 3–5 minute judge demonstration flow:
-- Step 1: Frontend server responding on port 5173 with root mount.
-- Steps 2–9: Location and lead-time switching across Delhi, Guwahati, Mumbai, Chennai, and Leh for T+24h, T+48h, and T+72h.
-- Step 10: Verification report endpoint (`GET /api/verification?dataset=real`) returning ERA5 reference reanalysis and headline gains.
-- Step 11: Lead-time analysis endpoint (`GET /api/lead-time-analysis`) returning out-of-sample breakdowns.
-- Step 12: Model registry endpoint (`GET /api/models`) returning all 6 models with BharatFS government citations.
 
 ---
 
-## 8. Final Status Checklist
+## 8. Final Status Checklist (Phase 5.1 Track Separation)
 
 ```
-SCIENTIFIC BENCHMARK:       UNCHANGED (Authoritative Phase 3 Results Preserved)
-BFS HISTORICAL VALIDATION:  PENDING (Architecturally Supported, No Fabricated Data)
-AIFS STATUS:                OPERATIONAL PROXY (Track B Retrospective Excluded)
-HGEFS STATUS:               REGISTERED ENSEMBLE
-BACKEND TESTS:              18/18 PASS
-FRONTEND BUILD:             PASS (Zero Errors)
-BROWSER DEMO SEQUENCE:      PASS (All 12 Steps Verified)
+VALIDATED BLEND:
+IFS + GFS + ICON
+
+BFS:
+Architecture supported / historical validation pending
+
+AIFS:
+Operational proxy / retrospective validation excluded
+
+HGEFS:
+Registered ensemble / not part of authoritative benchmark
 ```
