@@ -1,0 +1,183 @@
+PROPRIETARY SOFTWARE LICENSE
+SOURCE-AVAILABLE / ALL RIGHTS RESERVED
+
+Copyright © 2026 Ujjwal Raj. All rights reserved.
+
+===============================================================================
+1. LICENSING MODEL & NATURE OF REPOSITORY
+===============================================================================
+
+SANGAM (Hybrid AI–NWP Multi-Model Forecast Blending System) is proprietary
+software owned by Ujjwal Raj ("Copyright Holder").
+
+The public visibility or accessibility of the source code, repository, assets,
+or documentation on GitHub or any other hosting platform does NOT constitute
+an open-source release, free software publication, or dedication to the public
+domain.
+
+This repository is made visible exclusively for:
+- Project evaluation and judging;
+- Academic inspection and peer examination;
+- Project verification and technical auditing; and
+- Authorized review by designated evaluators and researchers.
+
+Public access for these limited purposes does not grant, convey, or imply any
+general right, license, or permission to reuse, modify, redistribute, sublicense,
+commercially exploit, or deploy SANGAM in any form or context.
+
+===============================================================================
+2. PERMITTED USE
+===============================================================================
+
+Subject to the terms and restrictions of this License, the Copyright Holder
+grants you a personal, limited, non-exclusive, non-transferable, revocable,
+and non-sublicensable permission to:
+
+a) Access, browse, view, and inspect the SANGAM-original source code,
+   architecture, and documentation solely for the review, evaluation,
+   and verification purposes set forth in Section 1; and
+
+b) Where reasonably necessary for verifying functionality in an isolated,
+   non-production evaluation environment, compile and execute the software
+   locally in accordance with the documented setup instructions, strictly
+   for testing and evaluation purposes.
+
+No other rights or permissions are granted or implied.
+
+===============================================================================
+3. PROHIBITED USES
+===============================================================================
+
+Except as expressly authorized in Section 2, or unless separately authorized
+in an explicit written agreement executed by the Copyright Holder, you shall
+not, directly or indirectly:
+
+a) Reproduce, copy, duplicate, or reuse SANGAM-original source code,
+   algorithms, mathematical formulations, or documentation, in whole or in
+   substantial part;
+
+b) Incorporate, embed, link, or bundle SANGAM-original code into any other
+   software, library, framework, service, product, or derivative project;
+
+c) Modify, adapt, alter, translate, or create derivative works based upon
+   SANGAM or any SANGAM-original component;
+
+d) Distribute, publish, publicly display, sublicense, sell, rent, lease,
+   loan, assign, or otherwise transfer SANGAM, in source or binary form, to
+   any third party;
+
+e) Deploy, host, or execute SANGAM for commercial purposes, operational
+   production use, fee-based services, or software-as-a-service (SaaS) offerings;
+
+f) Remove, alter, obscure, or distort any copyright, trademark, patent, or
+   other proprietary notices contained within the software or documentation; or
+
+g) Sublicense, delegate, or assign any of the limited permissions granted
+   under this License to any third party.
+
+Nothing in this Section shall be construed to limit or override any mandatory
+statutory rights that cannot be excluded, waived, or limited under applicable
+law.
+
+===============================================================================
+4. SEPARATE WRITTEN AUTHORIZATION
+===============================================================================
+
+Any commercial use, production deployment, integration into external software,
+forking, redistribution, modification, sublicensing, or institutional deployment
+outside the limited evaluation scope defined in Section 2 requires separate,
+explicit written permission from the Copyright Holder.
+
+Inquiries regarding licensing, operational collaboration, or commercial
+partnerships should be directed to the Copyright Holder.
+
+===============================================================================
+5. THIRD-PARTY COMPONENTS & ATTRIBUTION PRESERVATION
+===============================================================================
+
+This License applies SOLELY to the SANGAM-original source code, blending
+architecture, custom implementations, and documentation authored and owned
+by the Copyright Holder.
+
+The Copyright Holder does NOT claim ownership over, and this License does
+NOT supersede, alter, or restrict the rights granted under the applicable
+licenses, terms, or conditions governing third-party software, libraries,
+datasets, models, or service interfaces integrated with or utilized by SANGAM,
+including but not limited to:
+
+a) Mapping and Cartography:
+   - MapLibre GL and @maplibre/maplibre-gl-leaflet (governed by their respective
+     open-source licenses);
+   - OpenFreeMap vector tile service and hosting infrastructure (governed by
+     its applicable third-party terms and license);
+   - OpenMapTiles vector cartographic schema and data (CC-BY 4.0);
+   - OpenStreetMap spatial and geographic data (Open Data Commons Open Database
+     License - ODbL); and
+   - DataMeet India national boundary dataset (Creative Commons Zero 1.0
+     Universal - CC0 Public Domain Dedication; see boundary provenance in
+     frontend/public/data/BOUNDARIES.md).
+
+b) Meteorological Models, Services, and Data Providers:
+   - European Centre for Medium-Range Weather Forecasts (ECMWF) IFS, AIFS,
+     and ERA5 Atmospheric Reanalysis data and services;
+   - National Oceanic and Atmospheric Administration (NOAA) / NCEP GFS data;
+   - Deutscher Wetterdienst (DWD) ICON model data;
+   - Open-Meteo weather API services; and
+   - Bharat Forecast System (BharatFS) and Mission Mausam materials developed
+     by IITM Pune, IMD, and NCMRWF (Ministry of Earth Sciences, Govt. of India).
+
+c) Third-Party Software and Libraries:
+   - Python packages, runtime modules, and machine-learning libraries (FastAPI,
+     LightGBM, Pydantic, NumPy, SciPy, Pytest, Uvicorn, etc.);
+   - JavaScript/TypeScript dependencies (React, Vite, Leaflet, Lucide, etc.); and
+   - Any other external models, APIs, packages, or assets.
+
+Each third-party component remains subject to its own applicable license,
+terms of use, attribution requirements, and usage restrictions. Nothing in
+this License grants or purports to grant any rights in third-party components
+beyond those authorized by their respective licensors, nor does this License
+impose proprietary restrictions on independently licensed third-party assets.
+
+===============================================================================
+6. DISCLAIMER OF WARRANTIES
+===============================================================================
+
+SANGAM IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT,
+OR ACCURACY OF METEOROLOGICAL FORECASTS.
+
+METEOROLOGICAL AND SAFETY NOTICE:
+SANGAM is an experimental research and multi-model forecast blending prototype.
+Atmospheric forecasts generated or blended by SANGAM are computational estimates
+subject to meteorological uncertainty, observational gaps, and model bias.
+SANGAM is NOT certified as an official meteorological alert authority. SANGAM
+shall NOT be relied upon as the sole or primary basis for life-safety, aviation,
+marine navigation, emergency evacuation, or disaster response decisions. All
+critical weather advisories must be cross-referenced with authoritative notices
+issued by designated governmental authorities, such as the India Meteorological
+Department (IMD).
+
+===============================================================================
+7. LIMITATION OF LIABILITY
+===============================================================================
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, LOSSES, COSTS, OR
+EXPENSES, WHETHER IN AN ACTION OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
+STRICT LIABILITY, OR OTHERWISE, ARISING OUT OF OR IN CONNECTION WITH THE
+ACCESS, USE, INABILITY TO USE, EXECUTION, OR RELIANCE UPON SANGAM, ITS
+FORECAST OUTPUTS, ITS WEIGHTING ENGINE, OR ITS DOCUMENTATION, INCLUDING
+WITHOUT LIMITATION ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+PUNITIVE, OR CONSEQUENTIAL DAMAGES, LOSS OF PROFITS, BUSINESS INTERRUPTION,
+PROPERTY DAMAGE, OR LOSS OF DATA, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+===============================================================================
+8. RESERVATION OF RIGHTS
+===============================================================================
+
+All rights, titles, interests, copyrights, and intellectual property rights
+in and to SANGAM-original code, algorithms, architectures, designs, and
+documentation that are not expressly granted in this License are reserved
+exclusively by the Copyright Holder, Ujjwal Raj.
