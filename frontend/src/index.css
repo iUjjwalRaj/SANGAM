@@ -334,6 +334,15 @@ button.card {
   color: var(--accent-primary) !important;
 }
 
+/* India National Boundary Overlay */
+.india-boundary-line {
+  stroke: var(--accent-primary) !important;
+  stroke-width: 2.2px !important;
+  stroke-opacity: 0.85 !important;
+  stroke-dasharray: 6, 4;
+  pointer-events: none;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    TYPOGRAPHY HELPERS
    ═══════════════════════════════════════════════════════════════ */

@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import '@maplibre/maplibre-gl-leaflet';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import { setWorkerUrl } from 'maplibre-gl';
 import type { LocationInfo, ForecastResponse } from '../types';
+
+// Ensure MapLibre Web Worker and its shared chunk load identically in dev and prod
+setWorkerUrl('/maplibre/maplibre-gl-worker.mjs');
 import { MapPin } from 'lucide-react';
 
 interface ForecastMapProps {
@@ -37,14 +43,57 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
       attributionControl: true
     });
 
-    // OpenStreetMap tiles (free, no API key required)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // Vector Basemap (OpenFreeMap Liberty derived with international/disputed borders hidden)
+    const glLayer = L.maplibreGL({
+      style: '/data/maplibre-style.json'
     }).addTo(map);
+
+    const triggerGlUpdate = () => {
+      map.invalidateSize();
+      const glMap = (glLayer as any).getMaplibreMap?.() || (glLayer as any)._glMap;
+      if (glMap) {
+        glMap.triggerRepaint();
+      }
+    };
+
+    const glMap = (glLayer as any).getMaplibreMap?.() || (glLayer as any)._glMap;
+    if (glMap) {
+      glMap.on('load', triggerGlUpdate);
+    }
+    setTimeout(triggerGlUpdate, 200);
+    setTimeout(triggerGlUpdate, 600);
+
+    map.attributionControl.addAttribution(
+      'OpenFreeMap &copy; <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a> Data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+    );
 
     const markerGroup = L.layerGroup().addTo(map);
     markerGroupRef.current = markerGroup;
+
+    // Load India national boundary overlay (DataMeet CC0/MIT, aligned to Survey of India)
+    fetch('/data/india-boundary.json')
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((geoData) => {
+        if (!mapInstanceRef.current) return;
+        L.geoJSON(geoData, {
+          style: {
+            color: 'var(--accent-primary)',
+            weight: 2.2,
+            opacity: 0.85,
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            dashArray: '5, 4',
+            className: 'india-boundary-line',
+          },
+          interactive: false,
+        }).addTo(mapInstanceRef.current);
+      })
+      .catch((err) => {
+        console.warn('Could not load India boundary overlay:', err);
+      });
 
     // Handle Map Click
     map.on('click', (e: L.LeafletMouseEvent) => {
@@ -275,7 +324,7 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '850px' }}>
           <span>
-            <b>Cartographic Notice:</b> Basemap rendered from standard OpenStreetMap contributors (ODbL). International boundaries and disputed areas follow the conventions represented by the OpenStreetMap basemap and may differ from national governmental cartographic representations. Station coordinates use WGS84.
+            <b>Cartographic Notice:</b> Vector basemap from OpenFreeMap (OpenMapTiles / OSM Data) with international border layers hidden. India boundary overlay aligned with the Survey of India representation (DataMeet, CC0; see boundary provenance). Station coordinates use WGS84.
           </span>
         </div>
         <div style={{ fontSize: '10px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>

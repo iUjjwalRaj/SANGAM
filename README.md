@@ -1,15 +1,11 @@
 # SANGAM: Hybrid AI–NWP Multi-Model Forecast Blending System
 
-[![MoES](https://img.shields.io/badge/MoES-NCMRWF-blue.svg)](https://www.ncmrwf.gov.in/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite%20%2B%20TypeScript-61DAFB.svg)](https://react.dev/)
 [![ML](https://img.shields.io/badge/Engine-LightGBM%20%7C%20Gradient%20Attribution-ff69b4.svg)](https://lightgbm.readthedocs.io/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Smart India Hackathon — Problem Statement 26081**  
-> **Organization:** Ministry of Earth Sciences (MoES)  
-> **Department:** National Centre for Medium Range Weather Forecasting (NCMRWF)  
-> **Theme:** Disaster Management  
+**SANGAM** is an operational-grade multi-model forecast blending system that dynamically optimizes consensus weights across physics-based numerical weather prediction (NWP) models and AI weather foundation models over the Indian subcontinent.
 
 ---
 
@@ -88,8 +84,8 @@ Dashboard will be live at: [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 5. Offline Demo Mode Guarantee
-In hackathon and operational presentation setups where external internet connectivity may be restricted:
+## 5. Offline Demo & Air-Gapped Mode
+In air-gapped or presentation environments where external internet connectivity may be restricted:
 - SANGAM features a zero-dependency **Deterministic Simulation Engine** (`DemoProvider`).
 - If external weather APIs timeout or are unreachable, the system automatically falls back to deterministic simulation.
 - **Strict Data Provenance:** All outputs explicitly declare `LIVE` vs `DEMO/SIMULATED`.
@@ -97,6 +93,12 @@ In hackathon and operational presentation setups where external internet connect
 ---
 
 ## 6. Verification & Scientific Benchmarking
-Evaluated using a reproducible temporal holdout benchmark script (`scripts/evaluate_blending.py`):
-- **Proof-of-Concept Evaluation:** On a temporal holdout test set (Days 90–119), SANGAM dynamic ML weighting demonstrated a **6.7% RMSE reduction over simple averaging** and **36.3% RMSE reduction over the best single model** on simulated monsoonal precipitation cases.
-- **Scientific Caveat:** The current benchmark is evaluated on a synthetic temporal holdout dataset designed for algorithmic validation. Real-world operational skill figures require training and verification on multi-year archived IMD AWS station observations and NCMRWF/ERA5 reanalysis grids.
+Evaluated using a strict out-of-sample purged walk-forward historical benchmark protocol (`scripts/evaluate_real_holdout.py`):
+- **Benchmark Scope:** 41-day historical sample across five representative Indian locations during summer monsoon conditions (June 15 to July 25, 2024).
+- **Locations Evaluated:** Delhi (Plains), Guwahati (Subtropical), Mumbai (Western Coast), Chennai (Southern Coast), Leh (Trans-Himalayan).
+- **Out-of-Sample Results ($N = 1,800$ held-out test instances vs ERA5 reanalysis reference):**
+  - **Temperature (2m):** +15.35% improvement in MAE, SANGAM MAE = 1.026 °C
+  - **Precipitation:** +0.80% improvement in MAE, SANGAM MAE = 2.315 mm, statistically inconclusive
+  - **Wind Speed (10m):** +12.86% improvement in MAE, SANGAM MAE = 3.344 km/h
+- **Reference Standard:** ECMWF ERA5 Atmospheric Reanalysis is utilized strictly as an independent reanalysis reference, not direct surface observation ground truth.
+- **Operational Registry vs Validation:** Operational track supports real-time multi-model ingestion (including ECMWF AIFS and BharatFS architecture). Track B retrospective validation strictly audits models with verified historical operational archives (IFS, GFS, ICON).
