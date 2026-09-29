@@ -1,0 +1,66 @@
+# Extreme Weather Thresholds Configuration for SANGAM
+# Based on IMD (India Meteorological Department) & NCMRWF scientific operational standards
+
+precipitation:
+  heavy_rainfall:
+    threshold_mm_per_24h: 64.5
+    severity: "Moderate"
+    code: "HEAVY_RAIN"
+    description: "Heavy rainfall (64.5 - 115.5 mm / 24h) capable of localized waterlogging."
+  very_heavy_rainfall:
+    threshold_mm_per_24h: 115.6
+    severity: "Severe"
+    code: "VERY_HEAVY_RAIN"
+    description: "Very heavy rainfall (115.6 - 204.4 mm / 24h) with high flood and landslide risk."
+  extremely_heavy_rainfall:
+    threshold_mm_per_24h: 204.5
+    severity: "Extreme"
+    code: "EXTREMELY_HEAVY_RAIN"
+    description: "Extremely heavy rainfall (> 204.5 mm / 24h) requiring disaster mitigation activation."
+  hourly_flash_flood_rate:
+    threshold_mm_per_hour: 30.0
+    severity: "Severe"
+    code: "FLASH_FLOOD_RISK"
+    description: "Intense convective burst (> 30 mm/h) posing imminent urban flash flood risk."
+
+temperature:
+  heatwave:
+    threshold_celsius: 40.0
+    anomaly_threshold_celsius: 4.5
+    severity: "Severe"
+    code: "HEATWAVE"
+    description: "Severe heatwave conditions with high human heat stress."
+  extreme_heatwave:
+    threshold_celsius: 45.0
+    anomaly_threshold_celsius: 6.5
+    severity: "Extreme"
+    code: "EXTREME_HEATWAVE"
+    description: "Life-threatening heatwave conditions (> 45°C)."
+  coldwave:
+    threshold_celsius: 4.0
+    severity: "Moderate"
+    code: "COLDWAVE"
+    description: "Coldwave conditions with dangerous low temperatures."
+
+wind:
+  squall:
+    threshold_kmh: 50.0
+    severity: "Moderate"
+    code: "HIGH_WIND_SQUALL"
+    description: "Squall or high gale wind speed (> 50 km/h) threatening infrastructure."
+  gale_storm:
+    threshold_kmh: 75.0
+    severity: "Severe"
+    code: "GALE_STORM_FORCE"
+    description: "Gale to storm-force winds (> 75 km/h) capable of uprooting trees."
+  cyclonic_winds:
+    threshold_kmh: 90.0
+    severity: "Extreme"
+    code: "CYCLONIC_FORCE_WINDS"
+    description: "Severe cyclonic storm winds (> 90 km/h) hazardous to life and structures."
+
+disagreement:
+  high_model_spread_mm: 35.0
+  severity: "Advisory"
+  code: "HIGH_MODEL_DISAGREEMENT"
+  description: "Divergence between NWP and AI models indicates high atmospheric chaos or regime transition."

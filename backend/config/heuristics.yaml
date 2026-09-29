@@ -1,0 +1,34 @@
+# SANGAM Expert Domain Heuristics Configuration
+# Controls post-ML domain adjustments and regime priors.
+# Designed for complete scientific transparency: heuristics are distinct from ML predictions.
+
+heuristics_enabled: true
+
+# Blending weight: 0.0 = Pure ML model predictions, 1.0 = Pure Domain Heuristics
+# Default: 0.75 ML model weight, 0.25 Domain Heuristic prior
+ml_weight_ratio: 0.75
+
+# Lead-time dynamics prior
+lead_time:
+  ai_extended_horizon_threshold_hours: 48
+  ai_boost_max: 0.25
+  nwp_short_range_threshold_hours: 24
+  nwp_boost_max: 0.15
+
+# Regime-specific adjustments (prior logit deltas)
+regimes:
+  heavy_rainfall:
+    aifs_edge_bonus: 0.20
+    ifs_moisture_bonus: 0.15
+    gfs_convective_bias_penalty: -0.10
+  heatwave:
+    ifs_thermal_bonus: 0.20
+    gfs_heat_advection_bonus: 0.15
+  storm_cyclonic:
+    ensemble_dispersion_bonus: 0.30
+    ifs_track_bonus: 0.20
+  high_wind:
+    ifs_baroclinic_bonus: 0.15
+    ensemble_spread_bonus: 0.15
+  dry_spell:
+    neutralize_spread: true

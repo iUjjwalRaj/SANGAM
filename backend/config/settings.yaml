@@ -1,0 +1,131 @@
+system:
+  name: "SANGAM"
+  full_name: "Hybrid AI–NWP Multi-Model Forecast Blending System"
+  organization: "Ministry of Earth Sciences (MoES) / NCMRWF"
+  problem_code: "26081"
+  version: "1.0.0"
+
+locations:
+  - id: "delhi"
+    name: "New Delhi"
+    state: "Delhi"
+    lat: 28.6139
+    lon: 77.2090
+    elevation_m: 216
+    region: "North India (Indo-Gangetic Plain)"
+  - id: "guwahati"
+    name: "Guwahati"
+    state: "Assam"
+    lat: 26.1445
+    lon: 91.7362
+    elevation_m: 55
+    region: "Northeast India (Brahmaputra Valley)"
+  - id: "mumbai"
+    name: "Mumbai"
+    state: "Maharashtra"
+    lat: 19.0760
+    lon: 72.8777
+    elevation_m: 14
+    region: "Western Coastal India (Konkan)"
+  - id: "kolkata"
+    name: "Kolkata"
+    state: "West Bengal"
+    lat: 22.5726
+    lon: 88.3639
+    elevation_m: 9
+    region: "Eastern India (Gangetic Delta)"
+  - id: "chennai"
+    name: "Chennai"
+    state: "Tamil Nadu"
+    lat: 13.0827
+    lon: 80.2707
+    elevation_m: 6
+    region: "Southern Coastal India (Coromandel)"
+  - id: "bengaluru"
+    name: "Bengaluru"
+    state: "Karnataka"
+    lat: 12.9716
+    lon: 77.5946
+    elevation_m: 920
+    region: "South Deccan Plateau"
+  - id: "leh"
+    name: "Leh"
+    state: "Ladakh"
+    lat: 34.1526
+    lon: 77.5771
+    elevation_m: 3524
+    region: "High Altitude Trans-Himalayan"
+
+models:
+  - id: "ecmwf_ifs"
+    name: "ECMWF IFS"
+    type: "NWP"
+    resolution: "0.25°"
+    institution: "European Centre for Medium-Range Weather Forecasts"
+    validation_status: "HISTORICALLY VALIDATED (Track B)"
+    strengths: "Global medium-range synoptic accuracy, pressure systems, mid-latitude troughs"
+  - id: "ecmwf_aifs"
+    name: "ECMWF AIFS"
+    type: "AI"
+    resolution: "0.25°"
+    institution: "ECMWF AI Lab (Deep Learning NWP Emulator)"
+    validation_status: "OPERATIONAL PROXY (Track B Retrospective Excluded)"
+    strengths: "Fast inference, strong large-scale pattern propagation, 72h-120h lead times"
+  - id: "noaa_gfs"
+    name: "NOAA GFS"
+    type: "NWP"
+    resolution: "0.25°"
+    institution: "National Oceanic and Atmospheric Administration (NCEP)"
+    validation_status: "HISTORICALLY VALIDATED (Track B)"
+    strengths: "Rapid cycle updates, convective precipitation, tropical tracking"
+  - id: "dwd_icon"
+    name: "DWD ICON"
+    type: "NWP"
+    resolution: "0.25°"
+    institution: "Deutscher Wetterdienst (DWD)"
+    validation_status: "HISTORICALLY VALIDATED (Track B)"
+    strengths: "Non-hydrostatic icosahedral grid, fine scale thermodynamics, precipitation conservation"
+  - id: "ensemble"
+    name: "HGEFS / Global Ensemble"
+    type: "ENSEMBLE"
+    resolution: "0.5°"
+    institution: "Multi-Model Ensemble / NCMRWF Unified Ensemble"
+    validation_status: "HISTORICALLY VALIDATED"
+    strengths: "Probabilistic spread, uncertainty bounds, extreme outlier dampening"
+  - id: "bharat_fs"
+    name: "Bharat Forecast System (BharatFS)"
+    type: "NWP"
+    resolution: "6 km"
+    institution: "IITM Pune / IMD / NCMRWF (Ministry of Earth Sciences, Govt. of India)"
+    validation_status: "ARCHITECTURALLY SUPPORTED / HISTORICAL VALIDATION PENDING"
+    operational_adoption_date: "2025-05-26"
+    mission: "Mission Mausam (Union Cabinet approved, ₹2,000 Crore allocation)"
+    dynamical_core: "Triangular Cubic Octahedral (TCo) grid"
+    supercomputing:
+      iitm_cluster: "Arka (11.77 PFLOPS, 33 PB storage, IITM Pune)"
+      ncmrwf_cluster: "Arunika (8.24 PFLOPS, 24 PB storage, NCMRWF Noida)"
+      dedication: "Dedicated to the nation by Prime Minister Narendra Modi (2024)"
+    strengths: "Ultra-high 6km resolution, panchayat/village-cluster forecasting, 30% improvement in extreme rainfall events"
+    citations:
+      - title: "Cabinet approves Mission Mausam to create a more weather-ready and climate-smart Bharat"
+        source: "Press Information Bureau (PIB), Ministry of Earth Sciences, Govt. of India"
+        release_id: "PIB Release ID 2053890"
+        date: "2024-09-11"
+        url: "https://pib.gov.in/PressReleasePage.aspx?PRID=2053890"
+      - title: "Prime Minister dedicates two High Performance Computing (HPC) systems 'Arka' and 'Arunika' to the nation"
+        source: "Press Information Bureau (PIB), Prime Minister's Office, Govt. of India"
+        release_id: "PIB Release ID 2054238"
+        date: "2024-09-12"
+        url: "https://pib.gov.in/PressReleasePage.aspx?PRID=2054238"
+      - title: "Operational Adoption of Bharat Forecast System (BharatFS 6km)"
+        source: "India Meteorological Department (IMD) & Indian Institute of Tropical Meteorology (IITM)"
+        date: "2025-05-26"
+        url: "https://www.imd.gov.in"
+
+regimes:
+  - "normal"
+  - "heavy_rainfall"
+  - "heatwave"
+  - "high_wind"
+  - "dry_spell"
+  - "storm_cyclonic"
