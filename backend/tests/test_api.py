@@ -98,6 +98,49 @@ def test_api_forecast_pipeline():
     assert len(data["explainability"]) == 3  # Exactly 3 validated models explained
     assert "primary_reasons" in data["explainability"][0]
 
+def test_api_forecast_live_or_auto():
+    # 1. Test auto mode (should succeed and return valid forecast response)
+    response_auto = client.get("/api/forecast?lat=28.6139&lon=77.2090&lead_time=24&mode=auto")
+    assert response_auto.status_code == 200
+    data_auto = response_auto.json()
+    assert data_auto["data_source"] in ["LIVE", "DEMO/SIMULATED"]
+    assert len(data_auto["model_forecasts"]) == 6
+
+    # 2. Test live mode directly
+    response_live = client.get("/api/forecast?lat=28.6139&lon=77.2090&lead_time=24&mode=live")
+    if response_live.status_code == 200:
+        data_live = response_live.json()
+        assert data_live["data_source"] == "LIVE"
+    else:
+        assert response_live.status_code == 503
+        assert "Live meteorological provider" in response_live.json().get("detail", "")
+
+def test_api_forecast_mode_fallback_contract(monkeypatch):
+    """
+    Contract verification:
+    When the live provider fails:
+    - mode=live MUST NOT silently fall back to demo; it must return HTTP 503.
+    - mode=auto MUST gracefully fall back to DemoProvider and return HTTP 200 with DEMO/SIMULATED.
+    """
+    from backend.app.forecasting.provider_manager import provider_manager
+
+    async def mock_failing_get_forecast(*args, **kwargs):
+        raise ConnectionError("Mocked network drop to upstream Open-Meteo gateway")
+
+    monkeypatch.setattr(provider_manager.live_provider, "get_forecast", mock_failing_get_forecast)
+
+    # mode=live must fail with 503
+    res_live = client.get("/api/forecast?lat=28.6139&lon=77.2090&lead_time=24&mode=live")
+    assert res_live.status_code == 503
+    assert "Live meteorological provider" in res_live.json().get("detail", "")
+
+    # mode=auto must fall back to DEMO/SIMULATED with 200
+    res_auto = client.get("/api/forecast?lat=28.6139&lon=77.2090&lead_time=24&mode=auto")
+    assert res_auto.status_code == 200
+    data_auto = res_auto.json()
+    assert data_auto["data_source"] == "DEMO/SIMULATED"
+    assert len(data_auto["model_forecasts"]) == 6
+
 def test_api_verification():
     # Test Real Dataset Track (Track B)
     response_real = client.get("/api/verification?dataset=real&lead_time=24")

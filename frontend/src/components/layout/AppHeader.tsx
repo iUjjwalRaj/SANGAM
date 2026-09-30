@@ -81,9 +81,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     'HISTORICAL': { bg: 'color-mix(in srgb, var(--accent-warning) 12%, transparent)', text: 'var(--accent-warning)', border: 'color-mix(in srgb, var(--accent-warning) 30%, transparent)' },
     'DEMO/SIMULATED': { bg: 'color-mix(in srgb, var(--accent-ai) 12%, transparent)', text: 'var(--accent-ai)', border: 'color-mix(in srgb, var(--accent-ai) 30%, transparent)' },
   };
-  const mc = modeColors[dataSource] || modeColors['DEMO/SIMULATED'];
 
-  const modeLabel = dataSource === 'LIVE' ? 'LIVE DATA'
+  const isLive = selectedMode === 'live' || (selectedMode === 'auto' && dataSource === 'LIVE');
+  const effectiveMode = isLive ? 'LIVE' : (dataSource === 'HISTORICAL' ? 'HISTORICAL' : 'DEMO/SIMULATED');
+  const mc = modeColors[effectiveMode] || modeColors['DEMO/SIMULATED'];
+
+  const modeLabel = isLive
+    ? 'LIVE'
     : dataSource === 'HISTORICAL' ? 'HISTORICAL'
     : 'DEMO';
 
@@ -153,7 +157,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 height: '6px',
                 borderRadius: '50%',
                 background: mc.text,
-                animation: dataSource === 'LIVE' ? 'pulse-dot 2s infinite' : 'none',
+                animation: isLive ? 'pulse-dot 2s infinite' : 'none',
               }} />
               {modeLabel}
             </div>

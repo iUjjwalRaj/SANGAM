@@ -31,7 +31,14 @@ export async function fetchForecast(
   const url = `${API_BASE_URL}/forecast?lat=${lat}&lon=${lon}&lead_time=${leadTime}&mode=${mode}&variable=${variable}`;
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Failed to fetch forecast: HTTP ${res.status}`);
+    let errorDetail = `HTTP ${res.status}`;
+    try {
+      const errJson = await res.json();
+      if (errJson && errJson.detail) {
+        errorDetail = errJson.detail;
+      }
+    } catch {}
+    throw new Error(`Failed to fetch forecast: ${errorDetail}`);
   }
   return await res.json();
 }

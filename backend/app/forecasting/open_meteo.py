@@ -6,15 +6,21 @@ from backend.app.models.schemas import SingleModelForecast, AtmosphericState, Da
 from backend.app.forecasting.base import WeatherModelProvider
 from backend.app.utils.logger import logger
 
+DEFAULT_USER_AGENT = "SANGAM-Forecast-System/1.0 (MoES-NCMRWF; Research Prototype; https://sangam.ujjwalraj.online)"
+
 class OpenMeteoProvider(WeatherModelProvider):
     """
     Live forecast provider integrating with Open-Meteo Multi-Model & Observation APIs.
     Retrieves real-time operational NWP (ECMWF IFS, NOAA GFS), AI emulation, and ensemble spread.
     """
 
-    def __init__(self, base_url: str = "https://api.open-meteo.com/v1", timeout_seconds: float = 6.0):
+    def __init__(self, base_url: str = "https://api.open-meteo.com/v1", timeout_seconds: float = 10.0):
         self.base_url = base_url
         self.timeout = timeout_seconds
+        self.headers = {
+            "User-Agent": DEFAULT_USER_AGENT,
+            "Accept": "application/json"
+        }
 
     @property
     def provider_name(self) -> str:
@@ -36,7 +42,7 @@ class OpenMeteoProvider(WeatherModelProvider):
             "current": "temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,wind_direction_10m,precipitation,cloud_cover",
             "forecast_days": 1
         }
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
+        async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True, headers=self.headers) as client:
             resp = await client.get(url, params=params)
             resp.raise_for_status()
             data = resp.json()
@@ -74,7 +80,7 @@ class OpenMeteoProvider(WeatherModelProvider):
             "models": "ecmwf_ifs025,gfs_seamless,icon_seamless",
             "forecast_days": min(7, days + 1)
         }
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
+        async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True, headers=self.headers) as client:
             resp = await client.get(url, params=params)
             resp.raise_for_status()
             data = resp.json()

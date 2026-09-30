@@ -52,7 +52,14 @@ class ForecastProviderManager:
 
             return forecasts, atm_state, source, skills
         except Exception as e:
-            logger.warning(f"Live provider query failed ({e}). Activating deterministic DemoProvider fallback.")
+            logger.warning(f"Live provider query failed ({e}).")
+            if mode == "live":
+                from fastapi import HTTPException
+                raise HTTPException(
+                    status_code=503,
+                    detail=f"Live meteorological provider (Open-Meteo) currently unreachable: {e}"
+                )
+            logger.info("Activating deterministic DemoProvider fallback for auto mode.")
             forecasts, source = await self.demo_provider.get_forecast(lat, lon, lead_time_hours)
             atm_state = await self.demo_provider.get_atmospheric_state(lat, lon)
             skills = self.demo_provider.get_historical_skill(lat, lon, lead_time_hours)

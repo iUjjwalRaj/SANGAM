@@ -89,6 +89,9 @@ export function App() {
         dataMode
       );
       setForecast(data);
+      if (dataMode === 'live' && data.data_source === 'DEMO/SIMULATED') {
+        setError('Notice: Live meteorological provider is currently in fallback mode. Showing calibrated reference forecast.');
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error communicating with SANGAM backend.';
       console.error('Failed to load forecast:', err);
