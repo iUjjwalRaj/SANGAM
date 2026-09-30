@@ -9,6 +9,6 @@
     "not_found_handling": "single-page-application"
   },
   "vars": {
-    "BACKEND_API_URL": "http://127.0.0.1:8000"
+    "BACKEND_API_URL": "https://sangam-backend.onrender.com"
   }
 }

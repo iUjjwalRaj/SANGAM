@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 COPY backend/ /app/backend/
 COPY models/ /app/models/
 COPY data/processed/ /app/data/processed/
+COPY data/processed/ /app/backend/data/processed/
 
 # Production environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -26,9 +27,6 @@ ENV PYTHONUNBUFFERED=1 \
 
 EXPOSE 8000
 
-# Health check probe
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8000}/api/health || exit 1
-
 # Production ASGI server execution (single worker to fit comfortably within Render Free 512MB RAM)
-CMD ["sh", "-c", "uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
+# Uses exec so uvicorn receives PID 1 signals cleanly, and enables proxy headers for Render load balancer
+CMD ["sh", "-c", "exec uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --proxy-headers --forwarded-allow-ips '*'"]

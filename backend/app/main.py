@@ -67,6 +67,14 @@ else:
 
 app.include_router(router, prefix="/api")
 
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy",
+        "system": system_config.get("system", {}).get("name", "SANGAM"),
+        "version": system_config.get("system", {}).get("version", "1.0.0")
+    }
+
 @app.get("/")
 async def root():
     return {

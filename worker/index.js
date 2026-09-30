@@ -38,6 +38,7 @@ export default {
 
       // Forward request headers
       const headers = new Headers(request.headers);
+      headers.set("Host", new URL(cleanBase).host);
       headers.set("X-Forwarded-Host", url.host);
       headers.set("X-Forwarded-Proto", url.protocol.replace(":", ""));
 
