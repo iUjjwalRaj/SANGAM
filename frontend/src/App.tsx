@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 
 import { AppHeader } from './components/layout/AppHeader';
 import { SANGAMBootScreen } from './components/SANGAMBootScreen';
+import { SangamLogo } from './components/SangamLogo';
 import { useTheme } from './hooks/useTheme';
 import { fetchLocations, fetchForecast, checkBackendHealth } from './services/api';
 import type { LocationInfo, ForecastResponse } from './types';
@@ -169,13 +170,16 @@ export function App() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '16px',
+            gap: '20px',
             color: 'var(--accent-primary)',
           }}>
-            <Loader2 size={32} className="animate-spin" />
-            <span style={{ fontSize: '14px', fontWeight: 600 }}>
-              SANGAM loading multi-model forecasts…
-            </span>
+            <SangamLogo size="xl" isDecorative={true} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Loader2 size={18} className="animate-spin" />
+              <span style={{ fontSize: '14px', fontWeight: 600 }}>
+                SANGAM loading multi-model forecasts…
+              </span>
+            </div>
           </div>
         )}
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Sparkles, RefreshCw, BarChart2 } from 'lucide-react';
+import { RefreshCw, BarChart2 } from 'lucide-react';
+import { SangamLogo } from './SangamLogo';
 import type { DataSourceType } from '../types';
 
 interface HeaderProps {
@@ -23,18 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="glass-panel" style={{ padding: '14px 24px', marginBottom: '18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
       {/* Brand & Organization Title */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{
-          width: '46px',
-          height: '46px',
-          borderRadius: '12px',
-          background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-ai) 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 0 20px color-mix(in srgb, var(--accent-primary) 30%, transparent)'
-        }}>
-          <Sparkles size={24} color="var(--text-inverse)" />
-        </div>
+        <SangamLogo size="md" isDecorative={true} />
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', background: 'linear-gradient(90deg, var(--text-primary) 0%, var(--accent-primary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>

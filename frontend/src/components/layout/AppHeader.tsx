@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Sparkles,
   RefreshCw,
   Sun,
   Moon,
@@ -15,6 +14,7 @@ import {
   Lightbulb,
   LayoutDashboard
 } from 'lucide-react';
+import { SangamLogo } from '../SangamLogo';
 import type { Theme } from '../../hooks/useTheme';
 import type { DataSourceType } from '../../types';
 
@@ -89,20 +89,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         }}>
           {/* Brand / Logo area */}
           <NavLink to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            {/* Logo container — replace inner content with actual logo asset */}
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-ai) 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              transition: 'transform var(--transition-base)',
-            }}>
-              <Sparkles size={20} color="var(--text-inverse)" />
-            </div>
+            <SangamLogo size="md" isDecorative={true} />
             <div>
               <div style={{
                 fontFamily: 'var(--font-display)',

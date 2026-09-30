@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PipelineFlow } from '../components/PipelineFlow';
+import { SangamLogo } from '../components/SangamLogo';
+import { HeroAtmosphericParticles } from '../components/HeroAtmosphericParticles';
 import type { ForecastResponse } from '../types';
 import {
   Layers,
@@ -23,30 +25,29 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
   return (
     <div className="page-enter" style={{ maxWidth: '1200px', margin: '0 auto' }}>
       {/* Hero */}
-      <section style={{ textAlign: 'center', padding: '48px 16px 36px' }}>
-        <div className="badge badge-primary" style={{ marginBottom: '12px' }}>
-          Operational Forecast Blending Platform
+      <section className="overview-hero-section">
+        <HeroAtmosphericParticles />
+        <div className="overview-hero-content">
+          <div className="badge badge-primary" style={{ marginBottom: '18px' }}>
+            Research Prototype
+          </div>
+
+          <div className="overview-hero-logo-wrap">
+            <SangamLogo size="hero" isDecorative={true} />
+          </div>
+
+          <h1 className="hero-sangam-wordmark">
+            SANGAM
+          </h1>
+
+          <p className="overview-hero-subtitle">
+            Hybrid AI–NWP Multi-Model Forecast Blending System
+          </p>
+
+          <p className="overview-hero-description">
+            Context-aware dynamic weighting of multiple weather forecasting systems.
+          </p>
         </div>
-        <h1 className="page-title" style={{ fontSize: '36px', marginBottom: '8px' }}>
-          SANGAM
-        </h1>
-        <p style={{
-          fontSize: '17px',
-          color: 'var(--text-secondary)',
-          maxWidth: '640px',
-          margin: '0 auto 8px',
-          lineHeight: 1.6,
-        }}>
-          Hybrid AI–NWP Multi-Model Forecast Blending System
-        </p>
-        <p style={{
-          fontSize: '14px',
-          color: 'var(--text-muted)',
-          maxWidth: '560px',
-          margin: '0 auto',
-        }}>
-          Context-aware dynamic weighting of multiple weather forecasting systems.
-        </p>
       </section>
 
       {/* Executive Metrics */}
@@ -80,7 +81,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
               +15.35%
             </div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-              RMSE reduction vs. simple average
+              MAE improvement vs. simple average
             </div>
           </div>
 
@@ -94,7 +95,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
               +12.86%
             </div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-              RMSE reduction vs. simple average
+              MAE improvement vs. simple average
             </div>
           </div>
 

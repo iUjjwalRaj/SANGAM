@@ -10,6 +10,7 @@ import {
   ChevronUp, 
   Radio 
 } from 'lucide-react';
+import { SangamLogo } from './SangamLogo';
 
 interface HeroOverviewProps {
   dataSource: string;
@@ -65,6 +66,7 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ dataSource }) => {
               alignItems: 'center',
               gap: '12px'
             }}>
+              <SangamLogo size="lg" isDecorative={true} />
               SANGAM
               <span style={{ fontSize: '18px', fontWeight: '400', color: 'var(--text-muted)' }}>
                 | Hybrid AI–NWP Multi-Model Forecast Blending System
