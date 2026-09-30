@@ -141,6 +141,25 @@ def test_api_forecast_mode_fallback_contract(monkeypatch):
     assert data_auto["data_source"] == "DEMO/SIMULATED"
     assert len(data_auto["model_forecasts"]) == 6
 
+def test_open_meteo_base_url_configuration(monkeypatch):
+    """Verify that OPEN_METEO_BASE_URL can be configured via environment variable."""
+    from backend.app.config import Settings
+    from backend.app.forecasting.open_meteo import OpenMeteoProvider
+
+    # Default is the official api.open-meteo.com/v1 endpoint
+    default_settings = Settings()
+    assert default_settings.open_meteo_base_url == "https://api.open-meteo.com/v1"
+
+    # Configurable override via environment variable
+    custom_proxy_url = "https://sangam.feminismindia.com/provider/open-meteo/v1"
+    monkeypatch.setenv("OPEN_METEO_BASE_URL", custom_proxy_url)
+    custom_settings = Settings()
+    assert custom_settings.open_meteo_base_url == custom_proxy_url
+
+    # OpenMeteoProvider adopts the configured base_url
+    provider = OpenMeteoProvider(base_url=custom_settings.open_meteo_base_url)
+    assert provider.base_url == custom_proxy_url
+
 def test_api_verification():
     # Test Real Dataset Track (Track B)
     response_real = client.get("/api/verification?dataset=real&lead_time=24")

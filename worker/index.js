@@ -11,6 +11,62 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Dedicated Upstream Proxy for Open-Meteo Weather API
+    if (url.pathname.startsWith('/provider/open-meteo')) {
+      const subpath = url.pathname.replace(/^\/provider\/open-meteo/, '');
+
+      // Strict security whitelist: only permit /v1/forecast
+      if (!subpath.startsWith('/v1/forecast')) {
+        return new Response(
+          JSON.stringify({
+            error: "Forbidden upstream path",
+            detail: "Only /v1/forecast is permitted via SANGAM Open-Meteo gateway.",
+            system: "SANGAM",
+            timestamp: new Date().toISOString()
+          }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      }
+
+      const targetUrl = `https://api.open-meteo.com${subpath}${url.search}`;
+
+      const upstreamRequest = new Request(targetUrl, {
+        method: request.method,
+        headers: {
+          "User-Agent": "SANGAM-Forecast-System/1.0 (MoES/NCMRWF; Research Prototype; https://sangam.feminismindia.com)",
+          "Accept": "application/json"
+        },
+        redirect: "follow"
+      });
+
+      try {
+        const response = await fetch(upstreamRequest);
+        const resHeaders = new Headers(response.headers);
+        resHeaders.set("X-Proxied-By", "SANGAM-Cloudflare-Worker-OpenMeteo");
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: resHeaders
+        });
+      } catch (err) {
+        return new Response(
+          JSON.stringify({
+            error: "Open-Meteo upstream unreachable",
+            detail: err.message || "Failed to connect to api.open-meteo.com from Cloudflare edge.",
+            system: "SANGAM",
+            timestamp: new Date().toISOString()
+          }),
+          {
+            status: 504,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      }
+    }
+
     // API Gateway Proxy for /api/*
     if (url.pathname.startsWith('/api')) {
       const backendBase = env.BACKEND_API_URL;

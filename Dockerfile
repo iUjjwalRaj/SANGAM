@@ -23,7 +23,8 @@ COPY data/processed/ /app/backend/data/processed/
 ENV PYTHONUNBUFFERED=1 \
     APP_ENV=production \
     API_HOST=0.0.0.0 \
-    API_PORT=8000
+    API_PORT=8000 \
+    OPEN_METEO_BASE_URL=https://sangam.feminismindia.com/provider/open-meteo/v1
 
 EXPOSE 8000
 
