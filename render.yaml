@@ -13,3 +13,5 @@ services:
         value: auto
       - key: CORS_ORIGINS
         value: "*"
+      - key: OPEN_METEO_BASE_URL
+        value: https://sangam.feminismindia.com/provider/open-meteo/v1
