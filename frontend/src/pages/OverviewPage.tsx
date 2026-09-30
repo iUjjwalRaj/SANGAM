@@ -81,7 +81,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
               +15.35%
             </div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-              MAE improvement vs. simple average
+              RMSE reduction vs. simple average
             </div>
           </div>
 
@@ -95,7 +95,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
               +12.86%
             </div>
             <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-              MAE improvement vs. simple average
+              RMSE reduction vs. simple average
             </div>
           </div>
 
