@@ -48,7 +48,7 @@ export const DynamicWeightsPanel: React.FC<DynamicWeightsPanelProps> = ({
         </div>
 
         {/* Lead Time Selector Chips */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--surface-elevated)', padding: '4px', borderRadius: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--surface-elevated)', padding: '4px', borderRadius: '8px', maxWidth: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Sliders size={12} /> Lead:
           </span>

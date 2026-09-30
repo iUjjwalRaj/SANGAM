@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   RefreshCw,
   Sun,
@@ -48,7 +49,30 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onRefresh,
   isLoading
 }) => {
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Close drawer on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    if (mobileMenuOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   const ThemeIcon = theme === 'light' ? Sun : theme === 'oled' ? Monitor : Moon;
 
@@ -67,31 +91,27 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     <header style={{
       position: 'sticky',
       top: 0,
-      zIndex: 100,
+      zIndex: 1100,
       background: 'color-mix(in srgb, var(--bg-primary) 85%, transparent)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       borderBottom: '1px solid var(--border)',
       transition: 'background var(--transition-slow)',
     }}>
-      <div style={{
-        maxWidth: '1440px',
-        margin: '0 auto',
-        padding: '0 24px',
-      }}>
+      <div className="header-container">
         {/* Top row: brand + controls */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           height: '60px',
-          gap: '16px',
+          gap: '10px',
         }}>
           {/* Brand / Logo area */}
-          <NavLink to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+          <NavLink to="/" className="header-brand-link" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
             <SangamLogo size="md" isDecorative={true} />
             <div>
-              <div style={{
+              <div className="header-brand-title" style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: '20px',
                 fontWeight: 800,
@@ -101,7 +121,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               }}>
                 SANGAM
               </div>
-              <div style={{
+              <div className="header-brand-subtitle" style={{
                 fontSize: '10px',
                 fontWeight: 500,
                 color: 'var(--text-muted)',
@@ -114,9 +134,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </NavLink>
 
           {/* Right controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+          <div className="header-right-controls" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             {/* Data mode badge */}
-            <div style={{
+            <div className="header-mode-badge" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '5px',
@@ -172,7 +192,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             {/* Theme toggle */}
             <button
               onClick={onCycleTheme}
-              className="btn-icon"
+              className="btn-icon header-btn"
               title={themeLabel}
               style={{
                 width: '34px',
@@ -186,7 +206,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <button
               onClick={onRefresh}
               disabled={isLoading}
-              className="btn-icon"
+              className="btn-icon header-btn"
               title="Refresh forecast"
               style={{
                 width: '34px',
@@ -200,8 +220,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
             {/* Mobile menu toggle */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setMobileMenuOpen(prev => !prev)}
               className="btn-icon mobile-menu-toggle"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               style={{
                 width: '34px',
                 height: '34px',
@@ -241,50 +262,100 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         </nav>
       </div>
 
-      {/* Mobile nav drawer */}
-      {mobileMenuOpen && (
-        <div style={{
-          position: 'fixed',
-          top: '60px',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'color-mix(in srgb, var(--bg-primary) 96%, transparent)',
-          backdropFilter: 'blur(20px)',
-          zIndex: 99,
-          padding: '16px 24px',
-          animation: 'fadeIn 200ms ease-out',
-        }}>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
-              <NavLink
-                key={path}
-                to={path}
-                end={path === '/'}
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) => `nav-pill ${isActive ? 'active' : ''}`}
-                style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', fontSize: '15px' }}
-              >
-                <Icon size={18} />
-                <span>{label}</span>
-              </NavLink>
-            ))}
-          </nav>
-
-          {/* Mobile mode selector */}
-          <div style={{ marginTop: '20px', display: 'flex', gap: '6px' }}>
-            {['auto', 'live', 'demo'].map((mode) => (
+      {/* Mobile nav drawer & backdrop overlay */}
+      {mobileMenuOpen && typeof document !== 'undefined' && createPortal(
+        <div className="mobile-drawer-wrapper">
+          <div
+            className="mobile-drawer-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <aside
+            className="mobile-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation Menu"
+          >
+            <div className="mobile-drawer-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <SangamLogo size="sm" isDecorative={true} />
+                <div>
+                  <div style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '17px',
+                    fontWeight: 800,
+                    letterSpacing: '-0.3px',
+                    color: 'var(--text-primary)',
+                    lineHeight: 1.1,
+                  }}>
+                    SANGAM
+                  </div>
+                  <div style={{
+                    fontSize: '10px',
+                    fontWeight: 500,
+                    color: 'var(--text-muted)',
+                    letterSpacing: '0.2px',
+                  }}>
+                    AI–NWP Forecast Blending
+                  </div>
+                </div>
+              </div>
               <button
-                key={mode}
-                onClick={() => { onModeChange(mode); setMobileMenuOpen(false); }}
-                className={`btn ${selectedMode === mode ? 'btn-active' : ''}`}
-                style={{ flex: 1, textTransform: 'uppercase', fontSize: '12px' }}
+                onClick={() => setMobileMenuOpen(false)}
+                className="btn-icon"
+                aria-label="Close navigation"
+                style={{ width: '32px', height: '32px' }}
               >
-                {mode}
+                <X size={18} />
               </button>
-            ))}
-          </div>
-        </div>
+            </div>
+
+            <div className="mobile-drawer-body">
+              <div>
+                <div className="label" style={{ marginBottom: '8px', paddingLeft: '4px' }}>Navigation</div>
+                <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
+                    <NavLink
+                      key={path}
+                      to={path}
+                      end={path === '/'}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate(path);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={({ isActive }) => `nav-pill mobile-nav-pill ${isActive ? 'active' : ''}`}
+                    >
+                      <Icon size={17} />
+                      <span>{label}</span>
+                    </NavLink>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Mobile mode selector */}
+              <div style={{ paddingTop: '8px', borderTop: '1px solid var(--border)' }}>
+                <div className="label" style={{ marginBottom: '8px', paddingLeft: '4px' }}>Data Mode</div>
+                <div className="mobile-mode-selector">
+                  {['auto', 'live', 'demo'].map((mode) => (
+                    <button
+                      key={mode}
+                      onClick={() => { onModeChange(mode); setMobileMenuOpen(false); }}
+                      className={`mobile-mode-btn ${selectedMode === mode ? 'active' : ''}`}
+                    >
+                      {mode}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 'auto', paddingTop: '16px', fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                Operational Multi-Model Weather Synthesis
+              </div>
+            </div>
+          </aside>
+        </div>,
+        document.body
       )}
 
       {/* Responsive styles */}

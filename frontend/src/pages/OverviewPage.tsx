@@ -52,13 +52,9 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
 
       {/* Executive Metrics */}
       <section className="page-enter page-enter-delay-1" style={{ marginBottom: '28px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '14px',
-        }}>
+        <div className="metrics-overview-grid">
           {/* Validated Models */}
-          <div className="card" style={{ padding: '20px' }}>
+          <div className="card overview-metric-card">
             <div className="label" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Layers size={13} />
               Validated Models
@@ -72,7 +68,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
           </div>
 
           {/* Temperature */}
-          <div className="card" style={{ padding: '20px' }}>
+          <div className="card overview-metric-card">
             <div className="label" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Thermometer size={13} />
               Temperature
@@ -86,7 +82,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
           </div>
 
           {/* Wind */}
-          <div className="card" style={{ padding: '20px' }}>
+          <div className="card overview-metric-card">
             <div className="label" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Wind size={13} />
               Wind Speed
@@ -100,7 +96,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
           </div>
 
           {/* Precipitation */}
-          <div className="card" style={{ padding: '20px' }}>
+          <div className="card overview-metric-card">
             <div className="label" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <CloudRain size={13} />
               Precipitation
@@ -118,7 +114,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
       {/* Scientific Scope */}
       <section className="page-enter page-enter-delay-2" style={{ marginBottom: '28px' }}>
         <div className="card" style={{
-          padding: '18px 22px',
+          padding: '16px 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -155,13 +151,8 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
 
       {/* Quick Navigation Cards */}
       <section className="page-enter page-enter-delay-4" style={{ marginBottom: '36px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '14px',
-        }}>
-          <button className="card" onClick={() => navigate('/forecast')} style={{
-            padding: '20px',
+        <div className="quick-nav-grid">
+          <button className="card overview-nav-card" onClick={() => navigate('/forecast')} style={{
             cursor: 'pointer',
             textAlign: 'left',
             border: '1px solid var(--border)',
@@ -184,8 +175,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
             </p>
           </button>
 
-          <button className="card" onClick={() => navigate('/models')} style={{
-            padding: '20px',
+          <button className="card overview-nav-card" onClick={() => navigate('/models')} style={{
             cursor: 'pointer',
             textAlign: 'left',
             border: '1px solid var(--border)',
@@ -208,8 +198,7 @@ const OverviewPage: React.FC<OverviewPageProps> = (_props) => {
             </p>
           </button>
 
-          <button className="card" onClick={() => navigate('/indian-nwp')} style={{
-            padding: '20px',
+          <button className="card overview-nav-card" onClick={() => navigate('/indian-nwp')} style={{
             cursor: 'pointer',
             textAlign: 'left',
             border: '1px solid var(--border)',

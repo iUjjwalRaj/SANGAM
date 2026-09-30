@@ -78,7 +78,7 @@ const ForecastPage: React.FC<ForecastPageProps> = ({
       </div>
 
       {/* Map + Forecast summary grid */}
-      <div className="page-enter page-enter-delay-2" style={{
+      <div className="page-enter page-enter-delay-2 forecast-layout-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(320px, 1.3fr) minmax(320px, 1fr)',
         gap: '18px',

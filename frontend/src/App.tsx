@@ -140,12 +140,7 @@ export function App() {
       />
 
       {/* Main content area */}
-      <main style={{
-        maxWidth: '1440px',
-        margin: '0 auto',
-        padding: '24px 24px 0',
-        minHeight: 'calc(100vh - 120px)',
-      }}>
+      <main className="main-content-layout">
         {/* Error banner */}
         {error && (
           <div className="card" style={{

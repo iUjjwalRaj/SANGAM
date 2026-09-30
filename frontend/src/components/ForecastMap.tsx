@@ -48,20 +48,25 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
       style: '/data/maplibre-style.json'
     }).addTo(map);
 
+    let isMounted = true;
+
     const triggerGlUpdate = () => {
-      map.invalidateSize();
-      const glMap = (glLayer as any).getMaplibreMap?.() || (glLayer as any)._glMap;
-      if (glMap) {
-        glMap.triggerRepaint();
-      }
+      if (!isMounted || !mapInstanceRef.current) return;
+      try {
+        map.invalidateSize();
+        const glMap = (glLayer as any).getMaplibreMap?.() || (glLayer as any)._glMap;
+        if (glMap) {
+          glMap.triggerRepaint();
+        }
+      } catch {}
     };
 
     const glMap = (glLayer as any).getMaplibreMap?.() || (glLayer as any)._glMap;
     if (glMap) {
       glMap.on('load', triggerGlUpdate);
     }
-    setTimeout(triggerGlUpdate, 200);
-    setTimeout(triggerGlUpdate, 600);
+    const t1 = setTimeout(triggerGlUpdate, 200);
+    const t2 = setTimeout(triggerGlUpdate, 600);
 
     map.attributionControl.addAttribution(
       'OpenFreeMap &copy; <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a> Data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
@@ -103,12 +108,31 @@ export const ForecastMap: React.FC<ForecastMapProps> = ({
     });
 
     mapInstanceRef.current = map;
-    setTimeout(() => {
-      map.invalidateSize();
+    const t3 = setTimeout(() => {
+      if (isMounted && mapInstanceRef.current) {
+        try { map.invalidateSize(); } catch {}
+      }
     }, 150);
 
     return () => {
-      map.remove();
+      isMounted = false;
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      try {
+        const glInstance = (glLayer as any).getMaplibreMap?.() || (glLayer as any)._glMap;
+        if (glInstance && typeof glInstance.remove === 'function') {
+          glInstance.remove();
+        }
+      } catch {}
+      try {
+        if (map.hasLayer(glLayer)) {
+          map.removeLayer(glLayer);
+        }
+      } catch {}
+      try {
+        map.remove();
+      } catch {}
       mapInstanceRef.current = null;
     };
   }, []);

@@ -195,7 +195,7 @@ export const PipelineFlow: React.FC = () => {
       {/* Model Ingestion Breakdown: Validated vs Additional Systems (Part 3) */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
         gap: '12px',
         marginTop: '14px',
         padding: '12px 14px',
@@ -274,7 +274,7 @@ export const PipelineFlow: React.FC = () => {
           <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--accent-primary)', marginBottom: '6px' }}>
             Mathematical Blending Formulation:
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))', gap: '12px', fontSize: '12px', color: 'var(--text-secondary)' }}>
             <div style={{ background: 'var(--surface)', padding: '10px', borderRadius: '6px', border: '1px solid var(--border)' }}>
               <div style={{ fontFamily: 'monospace', color: 'var(--accent-primary)', fontWeight: '700', marginBottom: '4px' }}>
                 1. Non-Negativity &amp; Unit Normalization
